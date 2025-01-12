@@ -1,0 +1,100 @@
+﻿@rendermode InteractiveServer 
+@using BlazorApp.DTOs
+
+<MudDialog @bind-Visible="Visible" MaxWidth="MaxWidth.Small">
+    <MudDialogTitle>@(Product?.Id == Guid.Empty ? "Добавить товар" : "Редактировать товар")</MudDialogTitle>
+    <MudDialogContent>
+        <MudForm @ref="form" Valid="@valid">
+            <MudTextField @bind-Value="Product!.Name" Label="Название" Required="true" />
+            <MudSelect T="string" @bind-Value="Product!.Category.Name" Label="Категория" Required="true">
+                @foreach (var category in Categories)
+                {
+                    <MudSelectItem Value="@category.Name">@category.Name</MudSelectItem>
+                }
+            </MudSelect>
+            <MudSelect T="string" @bind-Value="Product!.Supplier.Name" Label="Поставщик" Required="true">
+                @foreach (var supplier in Suppliers)
+                {
+                    <MudSelectItem Value="@supplier.Name">@supplier.Name</MudSelectItem>
+                }
+            </MudSelect>
+            <MudNumericField T="decimal" @bind-Value="Product!.Price" Label="Цена" Min="0.01" Required="true" />
+        </MudForm>
+        @if (!string.IsNullOrEmpty(ErrorMessage))
+        {
+            <MudAlert Severity="Severity.Error" Class="mt-2">@ErrorMessage</MudAlert>
+        }
+    </MudDialogContent>
+    <MudDialogActions>
+        <MudButton Variant="Variant.Text" OnClick="OnCancel">Отмена</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="OnSave">Сохранить</MudButton>
+    </MudDialogActions>
+</MudDialog>
+
+@code{
+    [Parameter] public bool Visible { get; set; }
+    [Parameter] public EventCallback<bool> VisibleChanged { get; set; }
+    [Parameter] public ProductDto? Product { get; set; }
+    [Parameter] public List<CategoryDto> Categories { get; set; } = new();
+    [Parameter] public List<SupplierDto> Suppliers { get; set; } = new();
+    [Parameter] public EventCallback OnSaveCallback { get; set; }
+
+    private MudForm? form;
+    private bool valid;
+    private string ErrorMessage = string.Empty;
+
+        private async Task SaveProduct()
+    {
+         Console.WriteLine("Save EditProduct");
+
+        await form!.Validate();
+
+        if (!valid)
+            return;
+
+        try
+        {
+            var client = ClientFactory.CreateClient(HttpClientNames.APIClient);
+
+            if (selectedProduct!.Id == Guid.Empty)
+            {
+                // Создание
+                var response = await client.PostAsJsonAsync("product", selectedProduct);
+                if (response.IsSuccessStatusCode)
+                {
+                    await LoadProducts();
+                    Snackbar.Add("Товар успешно создан.", Severity.Success);
+                }
+                else
+                {
+                    errorMessage = $"Ошибка при создании товара: {response.StatusCode}";
+                    Snackbar.Add("Ошибка при создании товара.", Severity.Error);
+                }
+            }
+            else
+            {
+                // Обновление
+                var response = await client.PutAsJsonAsync($"product/{selectedProduct.Id}", selectedProduct);
+                if (response.IsSuccessStatusCode)
+                {
+                    await LoadProducts();
+                    Snackbar.Add("Товар успешно обновлен.", Severity.Success);
+                }
+                else
+                {
+                    errorMessage = $"Ошибка при обновлении товара: {response.StatusCode}";
+                    Snackbar.Add("Ошибка при обновлении товара.", Severity.Error);
+                }
+            }
+
+            isModalVisible = false;
+            selectedProduct = null;
+            errorMessage = string.Empty;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Ошибка сохранения товара: {ex.Message}";
+            Snackbar.Add("Ошибка при сохранении товара.", Severity.Error);
+        }
+    }
+}

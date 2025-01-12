@@ -1,12 +1,8 @@
-﻿using BlazorApp.Data;
-using BlazorApp.Entities;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using BlazorApp.Services.Interfaces;
-using BlazorApp.Services;
+﻿using AutoMapper;
 using BlazorApp.DTOs;
-using AutoMapper;
-using BlazorApp.Components;
+using BlazorApp.Entities;
+using BlazorApp.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BlazorApp.Controllers
 {
@@ -32,8 +28,9 @@ namespace BlazorApp.Controllers
         [HttpGet("get-all-with-link")]
         public async Task<IActionResult> GetAllWithLink()
         {
-           
-            try {
+
+            try
+            {
                 var products = await _productService.GetAllWithLinkAsync();
 
                 if (products == null || !products.Any())
@@ -53,7 +50,7 @@ namespace BlazorApp.Controllers
                 return StatusCode(500, "Внутренняя ошибка сервера.");
             }
 
-          
+
         }
 
         /// <summary>

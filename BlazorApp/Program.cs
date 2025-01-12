@@ -1,17 +1,16 @@
-using BlazorApp.Components;
+using BlazorApp.Constants;
 using BlazorApp.Data;
 using BlazorApp.Data.Repositories;
 using BlazorApp.Data.Repositories.Interfaces;
-using BlazorApp.Data.UnitOfWork.Interfaces;
 using BlazorApp.Data.UnitOfWork;
+using BlazorApp.Data.UnitOfWork.Interfaces;
+using BlazorApp.Mapping;
 using BlazorApp.Services;
 using BlazorApp.Services.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Diagnostics;
-using BlazorApp.Mapping;
-using FluentValidation.AspNetCore;
 using BlazorApp.Settings;
-using BlazorApp.Constants;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,6 +27,7 @@ if (string.IsNullOrEmpty(apiSettings?.BaseAddress))
 {
     throw new InvalidOperationException("BaseAddress для API не настроен в appsettings.json.");
 }
+
 
 // 2. Настройка подключения к базе данных.
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -62,9 +62,7 @@ builder.Services.AddFluentValidationAutoValidation()
 
 
 // Add services to the container.
-builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
-
+builder.Services.AddRazorComponents().AddInteractiveServerComponents();   // Для Blazor 
 
 // Регистрация HttpClient
 builder.Services.AddHttpClient(HttpClientNames.APIClient, client =>
@@ -116,13 +114,10 @@ if (!app.Environment.IsDevelopment())
 
 app.UseAntiforgery();
 
-// Map Blazor Server Hub
-/*  app.MapBlazorHub();
-  app.MapFallbackToPage("/_Host");*/
-
 app.MapStaticAssets();
+
 app.MapRazorComponents<App>().AddInteractiveServerRenderMode();  // Для Blazor
 
-app.MapControllers();     // Для API
+app.MapControllers();     // Для API 
 
 app.Run();

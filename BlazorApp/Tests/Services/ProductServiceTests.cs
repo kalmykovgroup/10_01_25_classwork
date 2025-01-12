@@ -41,6 +41,6 @@ namespace BlazorApp.Tests.Services
             // Act & Assert
             await Assert.ThrowsAsync<InvalidOperationException>(() => _productService.CreateProductAsync(product));
         }
-         
+
     }
 }

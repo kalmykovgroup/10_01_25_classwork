@@ -1,6 +1,4 @@
-﻿using BlazorApp.Entities;
-using System.ComponentModel.DataAnnotations;
-using Xunit.Sdk;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace BlazorApp.DTOs
 {

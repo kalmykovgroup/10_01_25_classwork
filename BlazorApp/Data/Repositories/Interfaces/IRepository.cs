@@ -1,8 +1,4 @@
-﻿using BlazorApp.Entities;
-using CSharpFunctionalExtensions;
-using System.Linq.Expressions;
-
-namespace BlazorApp.Data.Repositories.Interfaces
+﻿namespace BlazorApp.Data.Repositories.Interfaces
 {
     public interface IRepository<T> where T : class
     {

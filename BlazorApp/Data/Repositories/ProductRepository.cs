@@ -1,9 +1,8 @@
-﻿using BlazorApp.Data;
+﻿using BlazorApp.Data.Repositories.Interfaces;
 using BlazorApp.Entities;
 using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using BlazorApp.Data.Repositories.Interfaces;
 
 namespace BlazorApp.Data.Repositories
 {
@@ -31,7 +30,7 @@ namespace BlazorApp.Data.Repositories
                 .Include(p => p.Supplier)
                 .ToListAsync();
         }
-          
+
 
         public async Task<IEnumerable<Product>> SearchByNameAsync(string name)
         {
@@ -47,37 +46,37 @@ namespace BlazorApp.Data.Repositories
                     Func<IQueryable<Product>, IOrderedQueryable<Product>>? orderBy = null,
                     int? pageNumber = null,
                     int? pageSize = null)
-            { 
-                    IQueryable<Product> query = _dbSet;
+        {
+            IQueryable<Product> query = _dbSet;
 
-                    if (filter != null)
-                    {
-                        query = query.Where(filter);
-                    }
-
-                    if (orderBy != null)
-                    {
-                        query = orderBy(query);
-                    }
-
-                    if (pageNumber.HasValue && pageSize.HasValue)
-                    {
-                        if (pageNumber <= 0 || pageSize <= 0) throw new ArgumentException("pageNumber и pageSize должны быть больше 0");
-                        
-                        int skip = (pageNumber.Value - 1) * pageSize.Value;
-                        query = query.Skip(skip).Take(pageSize.Value);
-                    }
-
-                    return await query.Include(p => p.Category)
-                    .Include(p => p.Supplier).ToListAsync(); 
+            if (filter != null)
+            {
+                query = query.Where(filter);
             }
+
+            if (orderBy != null)
+            {
+                query = orderBy(query);
+            }
+
+            if (pageNumber.HasValue && pageSize.HasValue)
+            {
+                if (pageNumber <= 0 || pageSize <= 0) throw new ArgumentException("pageNumber и pageSize должны быть больше 0");
+
+                int skip = (pageNumber.Value - 1) * pageSize.Value;
+                query = query.Skip(skip).Take(pageSize.Value);
+            }
+
+            return await query.Include(p => p.Category)
+            .Include(p => p.Supplier).ToListAsync();
+        }
 
         public async Task<IEnumerable<Product>> GetAllWithLinkAsync()
         {
-           return await _dbSet
-                 .Include(p => p.Category)
-                 .Include(p => p.Supplier)
-                 .ToListAsync();
+            return await _dbSet
+                  .Include(p => p.Category)
+                  .Include(p => p.Supplier)
+                  .ToListAsync();
         }
     }
 }

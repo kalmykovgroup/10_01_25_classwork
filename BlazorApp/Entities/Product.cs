@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace BlazorApp.Entities
+﻿namespace BlazorApp.Entities
 {
     public class Product
     {
@@ -20,6 +18,6 @@ namespace BlazorApp.Entities
         public decimal Price { get; set; } // ■ Розничная цена;
 
         public DateTime DateOfDelivery { get; set; } = DateTime.Now; //■ Дата поставки.*/
-         
+
     }
 }

@@ -1,9 +1,6 @@
-﻿using BlazorApp.Data;
+﻿using BlazorApp.Data.Repositories.Interfaces;
 using BlazorApp.Entities;
-using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
-using BlazorApp.Data.Repositories.Interfaces;
 
 namespace BlazorApp.Data.Repositories
 {

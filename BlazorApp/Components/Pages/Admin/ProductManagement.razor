@@ -1,10 +1,14 @@
-﻿@using BlazorApp.Constants
+﻿@using BlazorApp.Components.Pages.Admin.Components.Dialogs
+@using BlazorApp.Constants
 @using BlazorApp.DTOs
-@using System.Text.Json
-@using MudBlazor
+@using System.Text.Json  
 @inject ISnackbar Snackbar
 @inject IDialogService DialogService
 @inject IHttpClientFactory ClientFactory
+@rendermode InteractiveServer
+
+<h3>@isModalVisible</h3>
+
 
 <MudPaper Elevation="1" Class="pa-4">
     <MudGrid>
@@ -39,29 +43,18 @@
         </MudItem>
     </MudGrid>
 
-    @if (selectedProduct != null)
-    {
-        <MudDialog @bind-Visible="isModalVisible" MaxWidth="MaxWidth.Small">
-            <MudDialogTitle>@(selectedProduct.Id == Guid.Empty ? "Добавить товар" : "Редактировать товар")</MudDialogTitle>
-            <MudDialogContent>
-                <MudForm @ref="form" Valid="@valid">
-                    <MudTextField @bind-Value="selectedProduct.Name" Label="Название" Required="true" />
-                    <MudTextField @bind-Value="selectedProduct.Category.Name" Label="Категория ID" Required="true" />
-                    <MudTextField @bind-Value="selectedProduct.Supplier.Name" Label="Поставщик ID" Required="true" />
-                    <MudNumericField @bind-Value="selectedProduct.Price" Label="Цена" Required="true" />
-                </MudForm>
-                @if (!string.IsNullOrEmpty(errorMessage))
-                {
-                    <MudAlert Severity="Severity.Error" Class="mt-2">@errorMessage</MudAlert>
-                }
-            </MudDialogContent>
-            <MudDialogActions>
-                <MudButton Variant="Variant.Text" OnClick="CloseModal">Отмена</MudButton>
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SaveProduct">Сохранить</MudButton>
-            </MudDialogActions>
-        </MudDialog>
-    }
+        <ProductDialog Visible="@isModalVisible"
+                   VisibleChanged="@((value) => isModalVisible = value)"
+                   Product="@selectedProduct"
+                   Categories="@categories"
+                   Suppliers="@suppliers"
+                   OnSaveCallback="SaveProduct" />
+
+ 
 </MudPaper>
+
+
+
 
 @code {
     private List<ProductDto>? products;
@@ -70,19 +63,20 @@
     private string errorMessage = string.Empty;
     private MudForm? form;
     private bool valid;
+     
+    private List<CategoryDto> categories = new();
+    private List<SupplierDto> suppliers = new();
+     
 
     protected override async Task OnInitializedAsync()
-    {
-        await LoadProducts();
-    }
-
-    private async Task LoadProducts()
     {
         try
         { 
             var client = ClientFactory.CreateClient(HttpClientNames.APIClient);
             products = await client.GetFromJsonAsync<List<ProductDto>>("product/get-all-with-link");
-             
+            categories = await client.GetFromJsonAsync<List<CategoryDto>>("category");
+            suppliers = await client.GetFromJsonAsync<List<SupplierDto>>("supplier");
+
         }
         catch (Exception ex)
         {
@@ -90,15 +84,26 @@
             Console.WriteLine($"{ex.Message}");
         }
     }
+ 
+
+    private Task OpenDialogAsync()
+    {
+        var options = new DialogOptions { CloseOnEscapeKey = true };
+
+        return DialogService.ShowAsync<ProductEdit_Dialog>("Simple Dialog", options);
+    }
 
     private void CreateProduct()
     {
+         Console.WriteLine("Create Product");
+
         selectedProduct = new ProductDto();
         isModalVisible = true;
     }
 
     private void EditProduct(ProductDto product)
     {
+        Console.WriteLine("Click EditProduct");
         // Копируем данные для избежания прямого изменения списка
         selectedProduct = new ProductDto
         {
@@ -109,10 +114,13 @@
             Price = product.Price
         };
         isModalVisible = true;
+        StateHasChanged(); // Обновляем UI
     }
 
     private async Task DeleteProduct(Guid productId)
     {
+        Console.WriteLine("Click DeleteProduct");
+
         bool? result = await DialogService.ShowMessageBox(
             "Подтверждение удаления",
             "Вы уверены, что хотите удалить этот товар?",
@@ -142,62 +150,13 @@
         }
     }
 
-    private async Task SaveProduct()
-    {
-        await form!.Validate();
 
-        if (!valid)
-            return;
-
-        try
-        {
-            var client = ClientFactory.CreateClient(HttpClientNames.APIClient);
-
-            if (selectedProduct!.Id == Guid.Empty)
-            {
-                // Создание
-                var response = await client.PostAsJsonAsync("product", selectedProduct);
-                if (response.IsSuccessStatusCode)
-                {
-                    await LoadProducts();
-                    Snackbar.Add("Товар успешно создан.", Severity.Success);
-                }
-                else
-                {
-                    errorMessage = $"Ошибка при создании товара: {response.StatusCode}";
-                    Snackbar.Add("Ошибка при создании товара.", Severity.Error);
-                }
-            }
-            else
-            {
-                // Обновление
-                var response = await client.PutAsJsonAsync($"product/{selectedProduct.Id}", selectedProduct);
-                if (response.IsSuccessStatusCode)
-                {
-                    await LoadProducts();
-                    Snackbar.Add("Товар успешно обновлен.", Severity.Success);
-                }
-                else
-                {
-                    errorMessage = $"Ошибка при обновлении товара: {response.StatusCode}";
-                    Snackbar.Add("Ошибка при обновлении товара.", Severity.Error);
-                }
-            }
-
-            isModalVisible = false;
-            selectedProduct = null;
-            errorMessage = string.Empty;
-        }
-        catch (Exception ex)
-        {
-            errorMessage = $"Ошибка сохранения товара: {ex.Message}";
-            Snackbar.Add("Ошибка при сохранении товара.", Severity.Error);
-        }
-    }
 
 
     private void CloseModal()
     {
+         Console.WriteLine("Close Modal");
+
         isModalVisible = false;
         selectedProduct = null;
         errorMessage = string.Empty;

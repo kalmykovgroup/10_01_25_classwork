@@ -47,7 +47,7 @@ namespace BlazorApp.Data
 
             var supplier_1_Id = Guid.Parse("33333333-3333-3333-3333-333333333333");
             var supplier_2_Id = Guid.Parse("44444444-4444-4444-4444-444444444444");
-              
+
 
             modelBuilder.Entity<Supplier>().HasData(
                 new Supplier
@@ -60,7 +60,7 @@ namespace BlazorApp.Data
                     Id = supplier_2_Id,
                     Name = "Поставщик продуктов"
                 }
-            ); 
+            );
 
 
             modelBuilder.Entity<Category>().HasData(
@@ -120,7 +120,7 @@ namespace BlazorApp.Data
                 }
             );
 
-             
+
         }
     }
 }

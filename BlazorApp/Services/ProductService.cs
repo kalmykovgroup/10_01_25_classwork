@@ -1,11 +1,8 @@
-﻿using BlazorApp.Data;
-using BlazorApp.Entities;
-using CSharpFunctionalExtensions;
-using BlazorApp.Data.Repositories.Interfaces;
-using BlazorApp.Services.Interfaces;
+﻿using AutoMapper;
 using BlazorApp.Data.UnitOfWork.Interfaces;
 using BlazorApp.DTOs;
-using AutoMapper;
+using BlazorApp.Entities;
+using BlazorApp.Services.Interfaces;
 
 namespace BlazorApp.Services
 {
@@ -39,8 +36,8 @@ namespace BlazorApp.Services
             var products = await _unitOfWork.Products.GetAllWithLinkAsync();
 
             // Маппинг в DTO
-            return _mapper.Map<IEnumerable<ProductDto>>(products); 
-             
+            return _mapper.Map<IEnumerable<ProductDto>>(products);
+
         }
 
         public async Task<bool> CreateProductAsync(Product product)

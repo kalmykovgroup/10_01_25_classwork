@@ -1,7 +1,5 @@
 ﻿using BlazorApp.DTOs;
 using BlazorApp.Entities;
-using CSharpFunctionalExtensions;
-using System.Linq.Expressions;
 
 namespace BlazorApp.Services.Interfaces
 {

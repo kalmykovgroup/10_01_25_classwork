@@ -1,0 +1,18 @@
+﻿@* <MudDialog @bind-Visible="isCategoryModalVisible" MaxWidth="MaxWidth.Small">
+    <MudDialogTitle>@(selectedCategory?.Id == Guid.Empty ? "Добавить категорию" : "Редактировать категорию")</MudDialogTitle>
+    <MudDialogContent>
+        <MudForm @ref="categoryForm" Valid="@categoryValid">
+            <MudTextField @bind-Value="selectedCategory.Name" Label="Название" Required="true" />
+            <MudTextField @bind-Value="selectedCategory.Description" Label="Описание" />
+        </MudForm>
+        @if (!string.IsNullOrEmpty(categoryErrorMessage))
+        {
+            <MudAlert Severity="Severity.Error" Class="mt-2">@categoryErrorMessage</MudAlert>
+        }
+    </MudDialogContent>
+    <MudDialogActions>
+        <MudButton Variant="Variant.Text" OnClick="CloseCategoryModal">Отмена</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SaveCategory">Сохранить</MudButton>
+    </MudDialogActions>
+</MudDialog>
+ *@
