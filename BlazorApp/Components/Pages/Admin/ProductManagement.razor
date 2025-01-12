@@ -1,0 +1,206 @@
+﻿@using BlazorApp.Constants
+@using BlazorApp.DTOs
+@using System.Text.Json
+@using MudBlazor
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+@inject IHttpClientFactory ClientFactory
+
+<MudPaper Elevation="1" Class="pa-4">
+    <MudGrid>
+        <MudItem xs="12">
+            <MudText Typo="Typo.h5">Список товаров</MudText>
+        </MudItem>
+        <MudItem xs="12">
+            <MudTable Items="products" Hover="true" Bordered="true" Striped="true">
+                <ToolBarContent>
+                    <MudText Typo="Typo.h6">Товары</MudText>
+                    <MudSpacer />
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="CreateProduct">Добавить товар</MudButton>
+                </ToolBarContent>
+                <HeaderContent>
+                    <MudTh>Название</MudTh>
+                    <MudTh>Цена</MudTh>
+                    <MudTh>Категория</MudTh>
+                    <MudTh>Поставщик</MudTh>
+                    <MudTh>Действия</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Название">@context.Name</MudTd>
+                    <MudTd DataLabel="Цена">@context.Price.ToString("C")</MudTd>
+                    <MudTd DataLabel="Категория">@(context.Category != null ? context.Category.Name : "Ошибка!")</MudTd>
+                    <MudTd DataLabel="Поставщик">@(context.Supplier != null ? context.Supplier.Name : "Ошибка!")</MudTd>
+                    <MudTd DataLabel="Действия">
+                        <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" OnClick="() => EditProduct(context)" />
+                        <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="() => DeleteProduct(context.Id)" />
+                    </MudTd>
+                </RowTemplate>
+            </MudTable>
+        </MudItem>
+    </MudGrid>
+
+    @if (selectedProduct != null)
+    {
+        <MudDialog @bind-Visible="isModalVisible" MaxWidth="MaxWidth.Small">
+            <MudDialogTitle>@(selectedProduct.Id == Guid.Empty ? "Добавить товар" : "Редактировать товар")</MudDialogTitle>
+            <MudDialogContent>
+                <MudForm @ref="form" Valid="@valid">
+                    <MudTextField @bind-Value="selectedProduct.Name" Label="Название" Required="true" />
+                    <MudTextField @bind-Value="selectedProduct.Category.Name" Label="Категория ID" Required="true" />
+                    <MudTextField @bind-Value="selectedProduct.Supplier.Name" Label="Поставщик ID" Required="true" />
+                    <MudNumericField @bind-Value="selectedProduct.Price" Label="Цена" Required="true" />
+                </MudForm>
+                @if (!string.IsNullOrEmpty(errorMessage))
+                {
+                    <MudAlert Severity="Severity.Error" Class="mt-2">@errorMessage</MudAlert>
+                }
+            </MudDialogContent>
+            <MudDialogActions>
+                <MudButton Variant="Variant.Text" OnClick="CloseModal">Отмена</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SaveProduct">Сохранить</MudButton>
+            </MudDialogActions>
+        </MudDialog>
+    }
+</MudPaper>
+
+@code {
+    private List<ProductDto>? products;
+    private ProductDto? selectedProduct;
+    private bool isModalVisible = false;
+    private string errorMessage = string.Empty;
+    private MudForm? form;
+    private bool valid;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadProducts();
+    }
+
+    private async Task LoadProducts()
+    {
+        try
+        { 
+            var client = ClientFactory.CreateClient(HttpClientNames.APIClient);
+            products = await client.GetFromJsonAsync<List<ProductDto>>("product/get-all-with-link");
+             
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Ошибка загрузки данных: {ex.Message}";
+            Console.WriteLine($"{ex.Message}");
+        }
+    }
+
+    private void CreateProduct()
+    {
+        selectedProduct = new ProductDto();
+        isModalVisible = true;
+    }
+
+    private void EditProduct(ProductDto product)
+    {
+        // Копируем данные для избежания прямого изменения списка
+        selectedProduct = new ProductDto
+        {
+            Id = product.Id,
+            Name = product.Name,
+            Category = product.Category,
+            Supplier = product.Supplier,
+            Price = product.Price
+        };
+        isModalVisible = true;
+    }
+
+    private async Task DeleteProduct(Guid productId)
+    {
+        bool? result = await DialogService.ShowMessageBox(
+            "Подтверждение удаления",
+            "Вы уверены, что хотите удалить этот товар?",
+            yesText: "Да",
+            noText: "Нет");
+
+        if (result == true)
+        {
+            try
+            {
+                var client = ClientFactory.CreateClient(HttpClientNames.APIClient);
+                var response = await client.DeleteAsync($"product/{productId}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    products = products?.Where(p => p.Id != productId).ToList();
+                }
+                else
+                {
+                    errorMessage = $"Ошибка при удалении товара (код: {response.StatusCode})";
+                }
+            }
+            catch (Exception ex)
+            {
+                errorMessage = $"Ошибка при удалении товара: {ex.Message}";
+            }
+        }
+    }
+
+    private async Task SaveProduct()
+    {
+        await form!.Validate();
+
+        if (!valid)
+            return;
+
+        try
+        {
+            var client = ClientFactory.CreateClient(HttpClientNames.APIClient);
+
+            if (selectedProduct!.Id == Guid.Empty)
+            {
+                // Создание
+                var response = await client.PostAsJsonAsync("product", selectedProduct);
+                if (response.IsSuccessStatusCode)
+                {
+                    await LoadProducts();
+                    Snackbar.Add("Товар успешно создан.", Severity.Success);
+                }
+                else
+                {
+                    errorMessage = $"Ошибка при создании товара: {response.StatusCode}";
+                    Snackbar.Add("Ошибка при создании товара.", Severity.Error);
+                }
+            }
+            else
+            {
+                // Обновление
+                var response = await client.PutAsJsonAsync($"product/{selectedProduct.Id}", selectedProduct);
+                if (response.IsSuccessStatusCode)
+                {
+                    await LoadProducts();
+                    Snackbar.Add("Товар успешно обновлен.", Severity.Success);
+                }
+                else
+                {
+                    errorMessage = $"Ошибка при обновлении товара: {response.StatusCode}";
+                    Snackbar.Add("Ошибка при обновлении товара.", Severity.Error);
+                }
+            }
+
+            isModalVisible = false;
+            selectedProduct = null;
+            errorMessage = string.Empty;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Ошибка сохранения товара: {ex.Message}";
+            Snackbar.Add("Ошибка при сохранении товара.", Severity.Error);
+        }
+    }
+
+
+    private void CloseModal()
+    {
+        isModalVisible = false;
+        selectedProduct = null;
+        errorMessage = string.Empty;
+    }
+}
+ 

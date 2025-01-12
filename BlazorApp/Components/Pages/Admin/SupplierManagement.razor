@@ -1,0 +1,193 @@
+﻿@using BlazorApp.Constants
+@using BlazorApp.DTOs
+@using System.Text.Json
+@using MudBlazor
+@inject IDialogService DialogService
+@inject IHttpClientFactory ClientFactory
+
+<MudPaper Elevation="1" Class="pa-4">
+    <MudGrid>
+        <MudItem xs="12">
+            <MudText Typo="Typo.h5">Список поставщиков</MudText>
+        </MudItem>
+        <MudItem xs="12">
+            <MudTable Items="suppliers" Hover="true" Bordered="true" Striped="true">
+                <ToolBarContent>
+                    <MudText Typo="Typo.h6">Поставщики</MudText>
+                    <MudSpacer />
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="CreateSupplier">Добавить поставщика</MudButton>
+                </ToolBarContent>
+                <HeaderContent>
+                    <MudTh>Название</MudTh>
+                    <MudTh>Email</MudTh>
+                    <MudTh>Телефон</MudTh>
+                    <MudTh>Действия</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Название">@context.Name</MudTd>
+                    <MudTd DataLabel="Email">@context.ContactEmail</MudTd>
+                    <MudTd DataLabel="Телефон">@context.ContactPhone</MudTd>
+                    <MudTd DataLabel="Действия">
+                        <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" OnClick="() => EditSupplier(context)" />
+                        <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="() => DeleteSupplier(context.Id)" />
+                    </MudTd>
+                </RowTemplate>
+            </MudTable>
+        </MudItem>
+    </MudGrid>
+
+    @if (selectedSupplier != null)
+    {
+        <MudDialog @bind-Visible="isModalVisible" MaxWidth="MaxWidth.Small">
+            <MudDialogTitle>@(selectedSupplier.Id == Guid.Empty ? "Добавить поставщика" : "Редактировать поставщика")</MudDialogTitle>
+            <MudDialogContent>
+                <MudForm @ref="form" Valid="@valid">
+                    <MudTextField @bind-Value="selectedSupplier.Name" Label="Название" Required="true" />
+                    <MudTextField @bind-Value="selectedSupplier.ContactEmail" Label="Email" Required="true" />
+                    <MudTextField @bind-Value="selectedSupplier.ContactPhone" Label="Телефон" Required="true" />
+                </MudForm>
+                @if (!string.IsNullOrEmpty(errorMessage))
+                {
+                    <MudAlert Severity="Severity.Error" Class="mt-2">@errorMessage</MudAlert>
+                }
+            </MudDialogContent>
+            <MudDialogActions>
+                <MudButton Variant="Variant.Text" OnClick="CloseModal">Отмена</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SaveSupplier">Сохранить</MudButton>
+            </MudDialogActions>
+        </MudDialog>
+    }
+</MudPaper>
+
+@code {
+    private List<SupplierDto>? suppliers;
+    private SupplierDto? selectedSupplier;
+    private bool isModalVisible = false;
+    private string errorMessage = string.Empty;
+    private MudForm? form;
+    private bool valid;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadSuppliers();
+    }
+
+    private async Task LoadSuppliers()
+    {
+        try
+        {
+            var client = ClientFactory.CreateClient(HttpClientNames.APIClient);
+            suppliers = await client.GetFromJsonAsync<List<SupplierDto>>("supplier");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Ошибка загрузки данных: {ex.Message}";
+        }
+    }
+
+    private void CreateSupplier()
+    {
+        selectedSupplier = new SupplierDto();
+        isModalVisible = true;
+    }
+
+    private void EditSupplier(SupplierDto supplier)
+    {
+        // Копируем данные для избежания прямого изменения списка
+        selectedSupplier = new SupplierDto
+        {
+            Id = supplier.Id,
+            Name = supplier.Name,
+            ContactEmail = supplier.ContactEmail,
+            ContactPhone = supplier.ContactPhone
+        };
+        isModalVisible = true;
+    }
+
+    private async Task DeleteSupplier(Guid supplierId)
+    {
+        bool? result = await DialogService.ShowMessageBox(
+            "Подтверждение удаления",
+            "Вы уверены, что хотите удалить этого поставщика?",
+            yesText: "Да",
+            noText: "Нет");
+
+        if (result == true)
+        {
+            try
+            {
+                var client = ClientFactory.CreateClient(HttpClientNames.APIClient);
+                var response = await client.DeleteAsync($"supplier/{supplierId}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    suppliers = suppliers?.Where(s => s.Id != supplierId).ToList();
+                }
+                else
+                {
+                    errorMessage = $"Ошибка при удалении поставщика (код: {response.StatusCode})";
+                }
+            }
+            catch (Exception ex)
+            {
+                errorMessage = $"Ошибка при удалении поставщика: {ex.Message}";
+            }
+        }
+    }
+
+    private async Task SaveSupplier()
+    {
+        await form!.Validate();
+
+        if (!valid)
+            return;
+
+        try
+        {
+            var client = ClientFactory.CreateClient(HttpClientNames.APIClient);
+
+            if (selectedSupplier!.Id == Guid.Empty)
+            {
+                // Создание
+                var response = await client.PostAsJsonAsync("supplier", selectedSupplier);
+                if (response.IsSuccessStatusCode)
+                {
+                    await LoadSuppliers();
+                }
+                else
+                {
+                    errorMessage = $"Ошибка при создании поставщика: {response.StatusCode}";
+                }
+            }
+            else
+            {
+                // Обновление
+                var response = await client.PutAsJsonAsync($"supplier/{selectedSupplier.Id}", selectedSupplier);
+                if (response.IsSuccessStatusCode)
+                {
+                    await LoadSuppliers();
+                }
+                else
+                {
+                    errorMessage = $"Ошибка при обновлении поставщика: {response.StatusCode}";
+                }
+            }
+
+            isModalVisible = false;
+            selectedSupplier = null;
+            errorMessage = string.Empty;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Ошибка сохранения поставщика: {ex.Message}";
+        }
+    }
+
+    private void CloseModal()
+    {
+        isModalVisible = false;
+        selectedSupplier = null;
+        errorMessage = string.Empty;
+    }
+}
+ 
