@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using BlazorApp.Data.UnitOfWork.Interfaces;
-using BlazorApp.DTOs;
+using BlazorApp.DTOs.Product;
 using BlazorApp.Entities;
 using BlazorApp.Services.Interfaces;
 

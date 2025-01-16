@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using BlazorApp.DTOs;
+using BlazorApp.DTOs.Supplier;
 using BlazorApp.Entities;
 using BlazorApp.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;

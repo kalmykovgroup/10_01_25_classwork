@@ -10,7 +10,8 @@ namespace BlazorApp.Data.Repositories
 
         public async Task<Category?> GetByNameAsync(string name)
         {
-            return await _dbSet.FirstOrDefaultAsync(c => c.Name == name);
+            throw new NotImplementedException();
+          //  return await _dbSet.FirstOrDefaultAsync(c => c.DefaultName == name);
         }
     }
 }

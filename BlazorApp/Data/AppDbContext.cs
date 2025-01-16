@@ -1,4 +1,5 @@
 ﻿using BlazorApp.Entities;
+using BlazorApp.Validators.Rules;
 using Microsoft.EntityFrameworkCore;
 
 namespace BlazorApp.Data
@@ -11,7 +12,7 @@ namespace BlazorApp.Data
 
         public AppDbContext(DbContextOptions<AppDbContext> options)
          : base(options)
-        {
+        { 
         }
 
 
@@ -24,18 +25,9 @@ namespace BlazorApp.Data
                 .HasForeignKey(c => c.ParentCategoryId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Настройка Product
-            modelBuilder.Entity<Product>()
-                .HasOne(p => p.Category)
-                .WithMany()
-                .HasForeignKey(p => p.CategoryId)
-                .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Product>()
-                .HasOne(p => p.Supplier)
-                .WithMany(s => s.Products)
-                .HasForeignKey(p => p.SupplierId)
-                .OnDelete(DeleteBehavior.Cascade);
+            ProductValidationRules.ConfigureEntity(modelBuilder);
+             
 
             base.OnModelCreating(modelBuilder);
 
@@ -67,12 +59,12 @@ namespace BlazorApp.Data
                 new Category
                 {
                     Id = electronicsCategoryId,
-                    Name = "Электроника"
+                    DefaultName = "Электроника"
                 },
                 new Category
                 {
                     Id = groceriesCategoryId,
-                    Name = "Продукты"
+                    DefaultName = "Продукты"
                 }
             );
 
@@ -83,9 +75,7 @@ namespace BlazorApp.Data
                     Id = Guid.NewGuid(),
                     Name = "Смартфон",
                     CategoryId = electronicsCategoryId,
-                    SupplierId = supplier_1_Id,
-                    Count = 7,
-                    CostPrice = 699.99M,
+                    SupplierId = supplier_1_Id, 
                     Price = 1699.99M
                 },
                 new Product
@@ -93,9 +83,7 @@ namespace BlazorApp.Data
                     Id = Guid.NewGuid(),
                     Name = "Ноутбук",
                     CategoryId = electronicsCategoryId,
-                    SupplierId = supplier_1_Id,
-                    Count = 5,
-                    CostPrice = 999.99M,
+                    SupplierId = supplier_1_Id, 
                     Price = 1999.99M,
                 },
                 new Product
@@ -103,9 +91,7 @@ namespace BlazorApp.Data
                     Id = Guid.NewGuid(),
                     Name = "Хлеб",
                     CategoryId = groceriesCategoryId,
-                    SupplierId = supplier_2_Id,
-                    Count = 50,
-                    CostPrice = 2.49M,
+                    SupplierId = supplier_2_Id, 
                     Price = 3.49M,
                 },
                 new Product
@@ -113,9 +99,7 @@ namespace BlazorApp.Data
                     Id = Guid.NewGuid(),
                     Name = "Молоко",
                     CategoryId = groceriesCategoryId,
-                    SupplierId = supplier_2_Id,
-                    Count = 20,
-                    CostPrice = 1.89M,
+                    SupplierId = supplier_2_Id, 
                     Price = 5.89M,
                 }
             );

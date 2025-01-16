@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using BlazorApp.Data.UnitOfWork.Interfaces;
-using BlazorApp.DTOs;
+using BlazorApp.DTOs.Category;
 using BlazorApp.Entities;
 using BlazorApp.Services.Interfaces;
 
@@ -31,17 +31,18 @@ namespace BlazorApp.Services
 
         public async Task<CategoryDto> CreateCategoryAsync(CategoryDto categoryDto)
         {
-            Category category = _mapper.Map<Category>(categoryDto);
+            throw new NotImplementedException();
+          /*  Category category = _mapper.Map<Category>(categoryDto);
 
             await _unitOfWork.BeginTransactionAsync();
 
             try
             {
                 // Проверка на существование категории с таким же именем
-                var existingCategory = await _unitOfWork.Categories.GetByNameAsync(category.Name);
+                var existingCategory = await _unitOfWork.Categories.GetByNameAsync(category.DefaultName);
                 if (existingCategory != null)
                 {
-                    _logger.LogWarning("Категория с именем {CategoryName} уже существует.", category.Name);
+                    _logger.LogWarning("Категория с именем {CategoryName} уже существует.", category.DefaultName);
                     throw new InvalidOperationException("Категория с таким именем уже существует.");
                 }
 
@@ -59,7 +60,7 @@ namespace BlazorApp.Services
                 await _unitOfWork.RollbackAsync();
                 _logger.LogError(ex, "Ошибка при создании категории с Id {CategoryId}.", category.Id);
                 throw;
-            }
+            }*/
         }
 
         public async Task<bool> UpdateCategoryAsync(Category category)

@@ -1,4 +1,4 @@
-﻿using BlazorApp.DTOs;
+﻿using BlazorApp.DTOs.Supplier;
 using FluentValidation;
 
 namespace BlazorApp.Validators

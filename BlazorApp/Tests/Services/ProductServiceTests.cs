@@ -30,7 +30,7 @@ namespace BlazorApp.Tests.Services
             {
                 Id = Guid.NewGuid(),
                 Name = "Test Product",
-                CostPrice = 10.0m,
+                Price = 100.0m,
                 CategoryId = Guid.NewGuid(),
                 SupplierId = Guid.NewGuid()
             };

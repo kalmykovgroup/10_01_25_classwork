@@ -1,9 +1,12 @@
+using BlazorApp.Components;
 using BlazorApp.Constants;
 using BlazorApp.Data;
 using BlazorApp.Data.Repositories;
 using BlazorApp.Data.Repositories.Interfaces;
 using BlazorApp.Data.UnitOfWork;
 using BlazorApp.Data.UnitOfWork.Interfaces;
+using BlazorApp.Helpers;
+using BlazorApp.Helpers.Interfaces;
 using BlazorApp.Mapping;
 using BlazorApp.Services;
 using BlazorApp.Services.Interfaces;
@@ -31,7 +34,7 @@ if (string.IsNullOrEmpty(apiSettings?.BaseAddress))
 
 // 2. Настройка подключения к базе данных.
 builder.Services.AddDbContext<AppDbContext>(options =>
- options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"))
+ options.UseLazyLoadingProxies().UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 
 // Регистрация репозиториев.
@@ -50,6 +53,8 @@ builder.Services.AddScoped<ISupplierService, SupplierService>();
 
 //Регистрация AutoMapper.
 builder.Services.AddAutoMapper(typeof(MappingProfile));
+builder.Services.AddTransient<ICloneHelper, CloneHelper>();
+builder.Services.AddTransient<IJavaScriptMethods, JavaScript>();
 
 //Добавление контроллеров с поддержкой FluentValidation.
 builder.Services.AddControllers().AddJsonOptions(options =>
@@ -71,8 +76,11 @@ builder.Services.AddHttpClient(HttpClientNames.APIClient, client =>
 });
 
 
-var app = builder.Build();
+// Добавляем логирование
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole(); // Включаем логирование в консоль
 
+var app = builder.Build();
 // Централизованная обработка исключений (Middleware).
 app.UseExceptionHandler(errorApp =>
 {

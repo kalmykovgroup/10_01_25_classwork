@@ -1,6 +1,7 @@
 ﻿@using BlazorApp.Constants
 @using BlazorApp.DTOs
 @using System.Text.Json 
+@using BlazorApp.DTOs.Supplier
 @inject IDialogService DialogService
 @inject IHttpClientFactory ClientFactory
 
@@ -35,27 +36,7 @@
         </MudItem>
     </MudGrid>
 
-    @if (selectedSupplier != null)
-    {
-        <MudDialog @bind-Visible="isModalVisible" MaxWidth="MaxWidth.Small">
-            <MudDialogTitle>@(selectedSupplier.Id == Guid.Empty ? "Добавить поставщика" : "Редактировать поставщика")</MudDialogTitle>
-            <MudDialogContent>
-                <MudForm @ref="form" Valid="@valid">
-                    <MudTextField @bind-Value="selectedSupplier.Name" Label="Название" Required="true" />
-                    <MudTextField @bind-Value="selectedSupplier.ContactEmail" Label="Email" Required="true" />
-                    <MudTextField @bind-Value="selectedSupplier.ContactPhone" Label="Телефон" Required="true" />
-                </MudForm>
-                @if (!string.IsNullOrEmpty(errorMessage))
-                {
-                    <MudAlert Severity="Severity.Error" Class="mt-2">@errorMessage</MudAlert>
-                }
-            </MudDialogContent>
-            <MudDialogActions>
-                <MudButton Variant="Variant.Text" OnClick="CloseModal">Отмена</MudButton>
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SaveSupplier">Сохранить</MudButton>
-            </MudDialogActions>
-        </MudDialog>
-    }
+
 </MudPaper>
 
 @code {

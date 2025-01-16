@@ -1,0 +1,195 @@
+﻿@using BlazorApp.Constants
+@using BlazorApp.DTOs
+@using BlazorApp.DTOs.Category
+@using BlazorApp.DTOs.Product
+@using BlazorApp.DTOs.Supplier
+@using BlazorApp.Helpers.Interfaces
+@using BlazorApp.Validators
+@using MudBlazor
+@using System.Text.Json
+@using System.Linq.Expressions
+@using System.Reflection
+@inject ICloneHelper CloneHelper
+@inject IJavaScriptMethods JavaScript
+@inject IHttpClientFactory ClientFactory
+@inherits CommonProductFormBaseComponent
+
+@rendermode InteractiveServer
+
+<div>
+    <MudDialog>  
+        <DialogContent >
+
+            @if (IsLoad || IsLoadUpdateProductDto)
+            { 
+                <MudOverlay DarkBackground Visible="true">
+                    <MudProgressCircular Indeterminate="true" Size="Size.Medium" />
+                </MudOverlay>      
+            }
+            <MudText Class="pt-5 pb-10">
+                @("Редактировать товар")
+            </MudText>
+
+
+            @if (UpdatedProductDto != null)
+            {
+                <MudForm @ref="form" Model="UpdatedProductDto" OnValidSubmit="HandleValidSubmit" Validation="@(validator.ValidateValue)" ValidationDelay="0">
+
+                    
+
+                    <MudTextField Value="@UpdatedProductDto.Name"
+                        Immediate="true"
+                        ValueChanged="@NameValueChangedCallback"
+                        Label="Название"
+                        Required="true" />
+
+
+                    <MudSelect 
+                        Value="@UpdatedProductDto.CategoryId"
+                        ValueChanged="@CategoryIdValueChangedCallback"
+                        Label="Категория"
+                        Variant="Variant.Outlined"  >
+                            @foreach (var category in Categories)
+                            {
+                                <MudSelectItem Value="@category.Id">@category.DefaultName</MudSelectItem>
+                            }
+                    </MudSelect>
+
+
+                    <MudSelect Value="@UpdatedProductDto.SupplierId" Immediate="true"
+                               ValueChanged="@SupplierIdValueChangedCallback" Label="Поставщик" Variant="Variant.Outlined">
+                        @foreach (var supplier in Suppliers)
+                        {
+                            <MudSelectItem Value="@(supplier.Id)">@supplier.Name</MudSelectItem> 
+                        } 
+                    </MudSelect>
+
+
+                    <MudNumericField T="decimal" Value="@UpdatedProductDto.Price" Immediate="true"
+                                     ValueChanged="@PriceValueChangedCallback" Label="Цена" Min="0.01m" Required="true" />
+
+
+                    @if (!string.IsNullOrEmpty(ErrorMessage))
+                    {
+                        <MudAlert Severity="Severity.Error" Class="mt-2">@ErrorMessage</MudAlert>
+                    } 
+                </MudForm>
+            } 
+
+        </DialogContent>
+
+        <DialogActions> 
+            <MudButton OnClick="Cancel" Class="cancel" Color="Color.Secondary">Отмена</MudButton>
+            <MudButton OnClick="SubmitForm" Disabled="@(!IsFormChanged)" Color="Color.Primary">Сохранить</MudButton>
+        </DialogActions>
+
+    </MudDialog> 
+</div>
+
+
+@code {
+    /*
+     * При добавлении новых полей не забудь создать NameValueChangedCallback
+     *
+     */
+
+
+    [Parameter] public ProductDto ProductDto { get; set; }  // Исходный продукт 
+
+    private UpdateProductDtoValidator validator = new UpdateProductDtoValidator(); 
+
+    private UpdateProductDto UpdatedProductDto { get; set; }  // Копия продукта для редактирования
+    private UpdateProductDto OriginalUpdateProductDto { get; set; }  // Копия продукта для редактирования
+
+    private bool IsLoadUpdateProductDto { get; set; } = true;
+
+    private bool IsFormChanged { get; set; } = false;
+
+    //Создаем EventCallback так как razor не разрешает писать сложную логику в форме
+
+    private EventCallback<T> CreateChangedCallback<T>(string fieldName){
+
+        return EventCallback.Factory.Create<T>(this, val => OnFieldChanged(fieldName, val));
+    }
+
+    private EventCallback<string> NameValueChangedCallback => CreateChangedCallback<string>(nameof(UpdatedProductDto.Name));
+    private EventCallback<Guid> CategoryIdValueChangedCallback => CreateChangedCallback<Guid>(nameof(UpdatedProductDto.CategoryId));
+    private EventCallback<Guid> SupplierIdValueChangedCallback => CreateChangedCallback<Guid>(nameof(UpdatedProductDto.SupplierId));
+    private EventCallback<decimal> PriceValueChangedCallback => CreateChangedCallback<decimal>(nameof(UpdatedProductDto.Price));
+
+    private void OnFieldChanged<T>(string fieldName, T newValue)
+    { 
+
+        var _property = typeof(UpdateProductDto).GetProperty(fieldName); 
+
+        if (_property == null)
+        {
+            IsFormChanged = true;
+            return;
+        } 
+
+        _property.SetValue(UpdatedProductDto, newValue);
+
+        // Получаем свойства типа T
+        var properties = typeof(UpdateProductDto).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+        foreach (var property in properties)
+        {
+            // Проверяем, можно ли прочитать свойство
+            if (!property.CanRead) continue;
+
+            var value1 = property.GetValue(OriginalUpdateProductDto);
+            var value2 = property.GetValue(UpdatedProductDto);
+
+            // Если значения отличаются
+            if (!Equals(value1, value2))
+            {
+                IsFormChanged = true;
+                StateHasChanged();// Обновление UI
+                return; 
+            }
+        }
+          
+        IsFormChanged = false;
+        StateHasChanged();// Обновление UI
+    }
+
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        _cts = new CancellationTokenSource();
+
+        try
+        {
+            var client = ClientFactory.CreateClient(HttpClientNames.APIClient);
+            UpdatedProductDto = await client.GetFromJsonAsync<UpdateProductDto>($"product/prepare-update/{ProductDto.Id}", _cts.Token);
+            OriginalUpdateProductDto = CloneHelper.Clone(UpdatedProductDto); 
+ 
+        }
+        catch (OperationCanceledException)
+        {
+            
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Ошибка при подготовке данных: {ex.Message}";
+            Snackbar.Add(ErrorMessage, Severity.Error);
+        }
+        finally
+        {
+            IsLoadUpdateProductDto = false;
+        }
+
+    }
+
+
+    private async Task SubmitForm()
+    {
+        await SubmitForm(async (HttpClient client, CancellationToken token) => await client.PutAsJsonAsync($"product/update/{UpdatedProductDto.Id}", UpdatedProductDto, token));
+    }
+     
+
+
+}

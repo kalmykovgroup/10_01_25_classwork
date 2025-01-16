@@ -1,6 +1,7 @@
 ﻿@using BlazorApp.Constants
 @using BlazorApp.DTOs
 @using System.Text.Json 
+@using BlazorApp.DTOs.Category
 @inject IDialogService DialogService
 
 @inject IHttpClientFactory ClientFactory
@@ -18,13 +19,11 @@
                     <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="CreateCategory">Добавить категорию</MudButton>
                 </ToolBarContent>
                 <HeaderContent>
-                    <MudTh>Название</MudTh>
-                    <MudTh>Описание</MudTh>
+                    <MudTh>Название</MudTh> 
                     <MudTh>Действия</MudTh>
                 </HeaderContent>
                 <RowTemplate>
-                    <MudTd DataLabel="Название">@context.Name</MudTd>
-                    <MudTd DataLabel="Описание">@context.Description</MudTd>
+                    <MudTd DataLabel="Название">@context.DefaultName</MudTd> 
                     <MudTd DataLabel="Действия">
                         <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" OnClick="() => EditCategory(context)" />
                         <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="() => DeleteCategory(context.Id)" />
@@ -34,26 +33,7 @@
         </MudItem>
     </MudGrid>
 
-    @if (selectedCategory != null)
-    {
-        <MudDialog @bind-Visible="isModalVisible" MaxWidth="MaxWidth.Small">
-            <MudDialogTitle>@(selectedCategory.Id == Guid.Empty ? "Добавить категорию" : "Редактировать категорию")</MudDialogTitle>
-            <MudDialogContent>
-                <MudForm @ref="form" Valid="@valid">
-                    <MudTextField @bind-Value="selectedCategory.Name" Label="Название" Required="true" />
-                    <MudTextField @bind-Value="selectedCategory.Description" Label="Описание" />
-                </MudForm>
-                @if (!string.IsNullOrEmpty(errorMessage))
-                {
-                    <MudAlert Severity="Severity.Error" Class="mt-2">@errorMessage</MudAlert>
-                }
-            </MudDialogContent>
-            <MudDialogActions>
-                <MudButton Variant="Variant.Text" OnClick="CloseModal">Отмена</MudButton>
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SaveCategory">Сохранить</MudButton>
-            </MudDialogActions>
-        </MudDialog>
-    }
+ 
 </MudPaper>
 
 @code { 
@@ -95,8 +75,7 @@
         selectedCategory = new CategoryDto
         {
             Id = category.Id,
-            Name = category.Name,
-            Description = category.Description
+            DefaultName = category.DefaultName, 
         };
         isModalVisible = true;
     }

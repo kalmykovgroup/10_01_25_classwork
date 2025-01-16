@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using BlazorApp.DTOs;
+using BlazorApp.DTOs.Category;
 using BlazorApp.Entities;
 using BlazorApp.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -69,7 +69,7 @@ namespace BlazorApp.Controllers
             {
                 CategoryDto createdCategoryDto = await _categoryService.CreateCategoryAsync(categoryDto);
 
-                return Ok(new { Message = $"Категория {createdCategoryDto.Name} успешно создана.", Category = createdCategoryDto });
+                return Ok(new { Message = $"Категория {createdCategoryDto.DefaultName} успешно создана.", Category = createdCategoryDto });
             }
             catch (InvalidOperationException ex)
             {
@@ -89,7 +89,8 @@ namespace BlazorApp.Controllers
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> Update(Guid id, [FromBody] CategoryDto categoryDto)
         {
-            if (categoryDto == null || id != categoryDto.Id)
+            throw new NotImplementedException();
+     /*       if (categoryDto == null || id != categoryDto.Id)
             {
                 _logger.LogWarning("Некорректный запрос на обновление категории.");
                 return BadRequest(new { Message = "Некорректный идентификатор категории." });
@@ -107,7 +108,7 @@ namespace BlazorApp.Controllers
                 var updated = await _categoryService.UpdateCategoryAsync(category);
                 if (updated)
                 {
-                    return Ok(new { Message = $"Категория {category.Name} успешно обновлена." });
+                    return Ok(new { Message = $"Категория {category.DefaultName} успешно обновлена." });
                 }
 
                 return NotFound(new { Message = "Категория не найдена." });
@@ -121,7 +122,7 @@ namespace BlazorApp.Controllers
             {
                 _logger.LogError(ex, "Необработанная ошибка при обновлении категории.");
                 return StatusCode(500, new { Message = "Внутренняя ошибка сервера." });
-            }
+            }*/
         }
 
         /// <summary>

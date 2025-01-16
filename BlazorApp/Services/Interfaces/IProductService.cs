@@ -1,4 +1,4 @@
-﻿using BlazorApp.DTOs;
+﻿using BlazorApp.DTOs.Product;
 using BlazorApp.Entities;
 
 namespace BlazorApp.Services.Interfaces

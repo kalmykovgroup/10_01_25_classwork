@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BlazorApp.Data.Repositories
 {
-    public class Repository<T> : IRepository<T> where T : class
+    public class Repository<T> : IRepository<T> where T : class, IEntity
     {
 
         protected readonly AppDbContext _context;
@@ -33,8 +33,22 @@ namespace BlazorApp.Data.Repositories
 
         public virtual void Update(T entity)
         {
+
             if (entity == null) throw new ArgumentNullException(nameof(entity));
-            _dbSet.Update(entity);
+
+            var trackedEntity = _dbSet.Local.FirstOrDefault(e => e.Id == entity.Id);
+            if (trackedEntity != null)
+            {
+                _context.Entry(trackedEntity).CurrentValues.SetValues(entity);
+            }
+            else
+            {
+                _dbSet.Attach(entity);
+                _context.Entry(entity).State = EntityState.Modified;
+            }
+
+            // Фиксация изменений в базе данных
+            _context.SaveChanges();
         }
 
         public virtual void Delete(T entity)
