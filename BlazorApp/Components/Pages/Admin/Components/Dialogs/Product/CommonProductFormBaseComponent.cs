@@ -1,14 +1,14 @@
-﻿using BlazorApp.Constants;
-using BlazorApp.DTOs.Product;
+﻿using _26_01_25.Constants;
+using _26_01_25.DTOs.Product;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
-using BlazorApp.DTOs.Category;
-using BlazorApp.DTOs.Supplier;
-using BlazorApp.Helpers.Interfaces;
-using BlazorApp.DTOs;
-using BlazorApp.Entities;
+using _26_01_25.DTOs.Category;
+using _26_01_25.DTOs.Supplier;
+using _26_01_25.Helpers.Interfaces;
+using _26_01_25.DTOs;
+using _26_01_25.Entities;
 
-namespace BlazorApp.Components.Pages.Admin.Components.Dialogs.Product
+namespace _26_01_25.Components.Pages.Admin.Components.Dialogs.Product
 {
     public class CommonProductFormBaseComponent : ComponentBase
     {

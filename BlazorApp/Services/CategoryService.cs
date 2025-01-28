@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using BlazorApp.Data.UnitOfWork.Interfaces;
-using BlazorApp.DTOs.Category;
-using BlazorApp.Entities;
-using BlazorApp.Services.Interfaces;
+using _26_01_25.Data.UnitOfWork.Interfaces;
+using _26_01_25.DTOs.Category;
+using _26_01_25.Entities._Category;
+using _26_01_25.Services.Interfaces;
 
-namespace BlazorApp.Services
+namespace _26_01_25.Services
 {
     public class CategoryService : ICategoryService
     {
@@ -32,7 +32,7 @@ namespace BlazorApp.Services
         public async Task<CategoryDto> CreateCategoryAsync(CategoryDto categoryDto)
         {
             throw new NotImplementedException();
-          /*  Category category = _mapper.Map<Category>(categoryDto);
+          /*  _Category category = _mapper.Map<_Category>(categoryDto);
 
             await _unitOfWork.BeginTransactionAsync();
 

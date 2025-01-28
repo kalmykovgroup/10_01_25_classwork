@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using BlazorApp.Data.UnitOfWork.Interfaces;
-using BlazorApp.DTOs.Product;
-using BlazorApp.Entities;
-using BlazorApp.Services.Interfaces;
+using _26_01_25.Data.UnitOfWork.Interfaces;
+using _26_01_25.DTOs.Product;
+using _26_01_25.Entities._Product;
+using _26_01_25.Services.Interfaces;
 
-namespace BlazorApp.Services
+namespace _26_01_25.Services
 {
     public class ProductService : IProductService
     {
@@ -46,7 +46,7 @@ namespace BlazorApp.Services
 
             try
             {
-                // Валидация Category
+                // Валидация _Category
                 bool categoryExists = await _unitOfWork.Categories.ExistsAsync(product.CategoryId);
                 if (!categoryExists)
                 {
@@ -54,7 +54,7 @@ namespace BlazorApp.Services
                     throw new InvalidOperationException("Указанной категории не существует.");
                 }
 
-                // Валидация Supplier
+                // Валидация _Supplier
                 bool supplierExists = await _unitOfWork.Suppliers.ExistsAsync(product.SupplierId);
                 if (!supplierExists)
                 {
@@ -92,7 +92,7 @@ namespace BlazorApp.Services
                     return false;
                 }
 
-                // Валидация Category
+                // Валидация _Category
                 bool categoryExists = await _unitOfWork.Categories.ExistsAsync(product.CategoryId);
                 if (!categoryExists)
                 {
@@ -100,7 +100,7 @@ namespace BlazorApp.Services
                     throw new InvalidOperationException("Указанной категории не существует.");
                 }
 
-                // Валидация Supplier
+                // Валидация _Supplier
                 bool supplierExists = await _unitOfWork.Suppliers.ExistsAsync(product.SupplierId);
                 if (!supplierExists)
                 {

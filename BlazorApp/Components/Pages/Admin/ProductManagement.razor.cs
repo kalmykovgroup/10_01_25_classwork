@@ -1,16 +1,16 @@
-﻿using BlazorApp.Components.Pages.Admin.Components.Dialogs;
-using BlazorApp.Components.Pages.Admin.Components.Dialogs.Product;
-using BlazorApp.Constants;
-using BlazorApp.DTOs.Category;
-using BlazorApp.DTOs.Product;
-using BlazorApp.DTOs.Supplier;
-using BlazorApp.Entities;
+﻿using _26_01_25.Components.Pages.Admin.Components.Dialogs;
+using _26_01_25.Components.Pages.Admin.Components.Dialogs.Product;
+using _26_01_25.Constants;
+using _26_01_25.DTOs.Category;
+using _26_01_25.DTOs.Product;
+using _26_01_25.DTOs.Supplier;
+using _26_01_25.Entities;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
-namespace BlazorApp.Components.Pages.Admin
+namespace _26_01_25.Components.Pages.Admin
 {
-    public partial class ProductManagement
+ /*   public partial class ProductManagement
     {
 
         [Inject] ISnackbar Snackbar { get; set; } = null!;
@@ -29,7 +29,7 @@ namespace BlazorApp.Components.Pages.Admin
             NoHeader = true
         };
 
-        protected override async Task OnInitializedAsync()
+        protected async Task OnInitializedAsync()
         {
 
             await LoadProducts();
@@ -144,5 +144,5 @@ namespace BlazorApp.Components.Pages.Admin
                 }
             }
         }
-    }
+    }*/
 }

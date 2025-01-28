@@ -1,9 +1,9 @@
-﻿using BlazorApp.DTOs.Category;
-using BlazorApp.DTOs.Supplier;
+﻿using _26_01_25.DTOs.Category;
+using _26_01_25.DTOs.Supplier;
 using System.ComponentModel.DataAnnotations;
 using Xunit.Sdk;
 
-namespace BlazorApp.DTOs.Product
+namespace _26_01_25.DTOs.Product
 {
     //У модели обновления могут присутствовать поля, которые отсутствуют у модели для отображения у клиента.
     public class UpdateProductDto

@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using BlazorApp.DTOs.Supplier;
-using BlazorApp.Entities;
-using BlazorApp.Services.Interfaces;
+using _26_01_25.DTOs.Supplier;
+using _26_01_25.Entities._Other;
+using _26_01_25.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BlazorApp.Controllers
+namespace _26_01_25.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

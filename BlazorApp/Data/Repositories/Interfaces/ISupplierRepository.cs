@@ -1,6 +1,6 @@
-﻿using BlazorApp.Entities;
+﻿using _26_01_25.Entities._Other;
 
-namespace BlazorApp.Data.Repositories.Interfaces
+namespace _26_01_25.Data.Repositories.Interfaces
 {
     public interface ISupplierRepository : IRepository<Supplier>
     {

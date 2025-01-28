@@ -1,8 +1,8 @@
-﻿using BlazorApp.Data.Repositories.Interfaces;
-using BlazorApp.Entities;
+﻿using _26_01_25.Data.Repositories.Interfaces;
+using _26_01_25.Entities._Category;
 using Microsoft.EntityFrameworkCore;
 
-namespace BlazorApp.Data.Repositories
+namespace _26_01_25.Data.Repositories
 {
     public class CategoryRepository : Repository<Category>, ICategoryRepository
     {

@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
-using BlazorApp.DTOs;
-using BlazorApp.DTOs.Product;
-using BlazorApp.Entities;
-using BlazorApp.Services.Interfaces;
+using _26_01_25.DTOs;
+using _26_01_25.DTOs.Product;
+using _26_01_25.Entities._Product;
+using _26_01_25.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace BlazorApp.Controllers
+namespace _26_01_25.Controllers
 {
 
     [ApiController]

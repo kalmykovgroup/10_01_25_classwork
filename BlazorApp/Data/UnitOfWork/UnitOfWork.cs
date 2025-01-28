@@ -1,8 +1,8 @@
-﻿using BlazorApp.Data.Repositories.Interfaces;
-using BlazorApp.Data.UnitOfWork.Interfaces;
+﻿using _26_01_25.Data.Repositories.Interfaces;
+using _26_01_25.Data.UnitOfWork.Interfaces;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace BlazorApp.Data.UnitOfWork
+namespace _26_01_25.Data.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork
     {

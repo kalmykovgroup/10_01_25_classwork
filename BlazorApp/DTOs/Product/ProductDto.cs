@@ -1,8 +1,8 @@
-﻿using BlazorApp.DTOs.Category;
-using BlazorApp.DTOs.Supplier;
+﻿using _26_01_25.DTOs.Category;
+using _26_01_25.DTOs.Supplier;
 using System.ComponentModel.DataAnnotations;
 
-namespace BlazorApp.DTOs.Product
+namespace _26_01_25.DTOs.Product
 {
     //Для отображения у клиента
     public class ProductDto

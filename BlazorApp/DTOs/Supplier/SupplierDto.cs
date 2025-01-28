@@ -1,4 +1,4 @@
-﻿namespace BlazorApp.DTOs.Supplier
+﻿namespace _26_01_25.DTOs.Supplier
 {
     public class SupplierDto
     {

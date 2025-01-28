@@ -1,4 +1,4 @@
-﻿namespace BlazorApp.Constants
+﻿namespace _26_01_25.Constants
 {
     public static class HttpClientNames
     {

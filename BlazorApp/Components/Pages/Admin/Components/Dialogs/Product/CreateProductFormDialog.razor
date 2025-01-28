@@ -1,10 +1,10 @@
-﻿@using BlazorApp.Constants
-@using BlazorApp.DTOs
-@using BlazorApp.DTOs.Category
-@using BlazorApp.DTOs.Product
-@using BlazorApp.DTOs.Supplier
-@using BlazorApp.Helpers.Interfaces
-@using BlazorApp.Validators
+﻿@using _26_01_25.Constants
+@using _26_01_25.DTOs
+@using _26_01_25.DTOs.Category
+@using _26_01_25.DTOs.Product
+@using _26_01_25.DTOs.Supplier
+@using _26_01_25.Helpers.Interfaces
+@using _26_01_25.Validators
 @using MudBlazor
 @inject ICloneHelper CloneHelper 
 
@@ -30,7 +30,7 @@
             <MudSelect T="Guid?" @bind-Value="CreateProductDto.SupplierId" Label="Поставщик" Variant="Variant.Outlined" Required="true" RequiredError="An Assigned Group is required."> 
                 @foreach (var supplier in Suppliers)
                 {
-                    <MudSelectItem T="Guid?" Value="@supplier.Id">@supplier.Name</MudSelectItem>
+                    <MudSelectItem T="Guid?" Value="@supplier.Id">@supplier?.Name</MudSelectItem>
                 } 
             </MudSelect>
 

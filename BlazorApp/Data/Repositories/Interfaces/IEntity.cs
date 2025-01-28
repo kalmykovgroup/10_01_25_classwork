@@ -1,4 +1,4 @@
-﻿namespace BlazorApp.Data.Repositories.Interfaces
+﻿namespace _26_01_25.Data.Repositories.Interfaces
 {
     public interface IEntity
     {

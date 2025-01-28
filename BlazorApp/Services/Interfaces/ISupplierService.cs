@@ -1,6 +1,6 @@
-﻿using BlazorApp.Entities;
+﻿using _26_01_25.Entities._Other;
 
-namespace BlazorApp.Services.Interfaces
+namespace _26_01_25.Services.Interfaces
 {
     public interface ISupplierService
     {

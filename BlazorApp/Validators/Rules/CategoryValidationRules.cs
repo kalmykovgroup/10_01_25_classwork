@@ -1,8 +1,8 @@
-﻿using BlazorApp.DTOs.Product;
+﻿using _26_01_25.DTOs.Product;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
-namespace BlazorApp.Validators.Rules
+namespace _26_01_25.Validators.Rules
 {
     public class CategoryValidationRules
     {

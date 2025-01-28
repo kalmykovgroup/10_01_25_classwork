@@ -1,4 +1,4 @@
-﻿namespace BlazorApp.Helpers.Interfaces
+﻿namespace _26_01_25.Helpers.Interfaces
 {
     public interface ICloneHelper
     {

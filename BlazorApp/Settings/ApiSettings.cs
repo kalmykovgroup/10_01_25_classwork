@@ -1,4 +1,4 @@
-﻿namespace BlazorApp.Settings
+﻿namespace _26_01_25.Settings
 {
     public class ApiSettings
     {

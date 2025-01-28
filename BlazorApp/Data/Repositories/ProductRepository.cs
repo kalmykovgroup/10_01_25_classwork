@@ -1,10 +1,10 @@
-﻿using BlazorApp.Data.Repositories.Interfaces;
-using BlazorApp.Entities;
+﻿using _26_01_25.Data.Repositories.Interfaces;
+using _26_01_25.Entities._Product;
 using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace BlazorApp.Data.Repositories
+namespace _26_01_25.Data.Repositories
 {
     public class ProductRepository : Repository<Product>, IProductRepository
     {

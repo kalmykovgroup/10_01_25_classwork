@@ -1,7 +1,7 @@
-﻿using BlazorApp.DTOs.Category;
-using BlazorApp.Entities;
+﻿using _26_01_25.DTOs.Category;
+using _26_01_25.Entities._Category;
 
-namespace BlazorApp.Services.Interfaces
+namespace _26_01_25.Services.Interfaces
 {
     public interface ICategoryService
     {

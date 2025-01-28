@@ -1,8 +1,8 @@
-﻿using BlazorApp.Constants;
-using BlazorApp.Helpers.Interfaces;
+﻿using _26_01_25.Constants;
+using _26_01_25.Helpers.Interfaces;
 using Microsoft.JSInterop;
 
-namespace BlazorApp.Helpers
+namespace _26_01_25.Helpers
 {
     public class JavaScript : IJavaScriptMethods
     {

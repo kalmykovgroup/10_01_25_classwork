@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Xunit.Sdk;
 
-namespace BlazorApp.DTOs.Product
+namespace _26_01_25.DTOs.Product
 {
     public class CreateProductDto
     {        

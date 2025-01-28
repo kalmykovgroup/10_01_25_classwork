@@ -1,4 +1,4 @@
-﻿namespace BlazorApp.DTOs.Product
+﻿namespace _26_01_25.DTOs.Product
 {
     public class ProductResponseDto
     { 

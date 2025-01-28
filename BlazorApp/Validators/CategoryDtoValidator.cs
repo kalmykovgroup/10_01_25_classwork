@@ -1,7 +1,7 @@
-﻿using BlazorApp.DTOs.Category;
+﻿using _26_01_25.DTOs.Category;
 using FluentValidation;
 
-namespace BlazorApp.Validators
+namespace _26_01_25.Validators
 {
     public class CategoryDtoValidator : AbstractValidator<CategoryDto>
     {

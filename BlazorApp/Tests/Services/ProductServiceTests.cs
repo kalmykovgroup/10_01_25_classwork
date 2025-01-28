@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
-using BlazorApp.Data.UnitOfWork.Interfaces;
-using BlazorApp.Entities;
-using BlazorApp.Services;
+using _26_01_25.Data.UnitOfWork.Interfaces;
+using _26_01_25.Entities;
+using _26_01_25.Entities._Product;
+using _26_01_25.Services;
 using Moq;
 using Xunit;
 
-namespace BlazorApp.Tests.Services
+namespace _26_01_25.Tests.Services
 {
     public class ProductServiceTests
     {
@@ -28,8 +29,7 @@ namespace BlazorApp.Tests.Services
             // Arrange
             var product = new Product
             {
-                Id = Guid.NewGuid(),
-                Name = "Test Product",
+                Id = Guid.NewGuid(), 
                 Price = 100.0m,
                 CategoryId = Guid.NewGuid(),
                 SupplierId = Guid.NewGuid()

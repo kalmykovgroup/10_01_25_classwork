@@ -1,7 +1,7 @@
-﻿using BlazorApp.Data.Repositories.Interfaces;
+﻿using _26_01_25.Data.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace BlazorApp.Data.Repositories
+namespace _26_01_25.Data.Repositories
 {
     public class Repository<T> : IRepository<T> where T : class, IEntity
     {

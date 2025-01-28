@@ -1,6 +1,6 @@
-﻿using BlazorApp.Data.Repositories.Interfaces;
+﻿using _26_01_25.Data.Repositories.Interfaces;
 
-namespace BlazorApp.Data.UnitOfWork.Interfaces
+namespace _26_01_25.Data.UnitOfWork.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {

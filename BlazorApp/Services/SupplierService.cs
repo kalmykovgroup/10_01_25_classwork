@@ -1,8 +1,8 @@
-﻿using BlazorApp.Data.UnitOfWork.Interfaces;
-using BlazorApp.Entities;
-using BlazorApp.Services.Interfaces;
+﻿using _26_01_25.Data.UnitOfWork.Interfaces;
+using _26_01_25.Entities._Other;
+using _26_01_25.Services.Interfaces;
 
-namespace BlazorApp.Services
+namespace _26_01_25.Services
 {
     public class SupplierService : ISupplierService
     {

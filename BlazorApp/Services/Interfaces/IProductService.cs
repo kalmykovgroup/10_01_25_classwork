@@ -1,7 +1,7 @@
-﻿using BlazorApp.DTOs.Product;
-using BlazorApp.Entities;
+﻿using _26_01_25.DTOs.Product;
+using _26_01_25.Entities._Product;
 
-namespace BlazorApp.Services.Interfaces
+namespace _26_01_25.Services.Interfaces
 {
     public interface IProductService
     {

@@ -1,7 +1,7 @@
-﻿using BlazorApp.DTOs.Supplier;
+﻿using _26_01_25.DTOs.Supplier;
 using FluentValidation;
 
-namespace BlazorApp.Validators
+namespace _26_01_25.Validators
 {
     public class SupplierDtoValidator : AbstractValidator<SupplierDto>
     {

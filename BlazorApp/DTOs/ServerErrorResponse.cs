@@ -1,4 +1,4 @@
-﻿namespace BlazorApp.DTOs
+﻿namespace _26_01_25.DTOs
 {
     public class ServerErrorResponse
     {

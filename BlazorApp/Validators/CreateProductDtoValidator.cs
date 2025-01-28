@@ -1,8 +1,8 @@
-﻿using BlazorApp.DTOs.Product;
-using BlazorApp.Validators.Rules;
+﻿using _26_01_25.DTOs.Product;
+using _26_01_25.Validators.Rules;
 using FluentValidation;
 
-namespace BlazorApp.Validators
+namespace _26_01_25.Validators
 {
     public class CreateProductDtoValidator : AbstractValidator<CreateProductDto>
     {

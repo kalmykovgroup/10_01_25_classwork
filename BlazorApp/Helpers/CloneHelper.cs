@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using BlazorApp.Helpers.Interfaces;
+using _26_01_25.Helpers.Interfaces;
 
-namespace BlazorApp.Helpers
+namespace _26_01_25.Helpers
 {
     public class CloneHelper : ICloneHelper
     {

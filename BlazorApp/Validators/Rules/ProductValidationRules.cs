@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using FluentValidation;
-using BlazorApp.Entities;
-using BlazorApp.DTOs.Product;
+using _26_01_25.DTOs.Product;
+using _26_01_25.Entities._Product;
 
-namespace BlazorApp.Validators.Rules
+namespace _26_01_25.Validators.Rules
 {
 
     public static class ProductValidationRules
@@ -14,7 +14,7 @@ namespace BlazorApp.Validators.Rules
         // Конфигурация для Entity Framework Core
         public static void ConfigureEntity(ModelBuilder modelBuilder)
         {
-            // Настройка Product
+            // Настройка _ProductConfigs
             modelBuilder.Entity<Product>()
                 .HasOne(p => p.Category)
                 .WithMany()

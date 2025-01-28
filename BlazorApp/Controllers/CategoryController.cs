@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using BlazorApp.DTOs.Category;
-using BlazorApp.Entities;
-using BlazorApp.Services.Interfaces;
+using _26_01_25.DTOs.Category;
+using _26_01_25.Entities;
+using _26_01_25.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BlazorApp.Controllers
+namespace _26_01_25.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -104,7 +104,7 @@ namespace BlazorApp.Controllers
 
             try
             {
-                var category = _mapper.Map<Category>(categoryDto);
+                var category = _mapper.Map<_Category>(categoryDto);
                 var updated = await _categoryService.UpdateCategoryAsync(category);
                 if (updated)
                 {
