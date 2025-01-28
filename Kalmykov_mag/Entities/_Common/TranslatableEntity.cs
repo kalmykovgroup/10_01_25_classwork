@@ -72,8 +72,9 @@ namespace Kalmykov_mag.Entities._Common
                .WithMany(r => r.Translations)
                .HasForeignKey(rt => rt.EntityId)
                .OnDelete(DeleteBehavior.Cascade);
-
+                
             });
+             
 
             modelBuilder.Entity<TEntity>(entity =>
             {

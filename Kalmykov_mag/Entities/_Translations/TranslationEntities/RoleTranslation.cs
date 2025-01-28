@@ -30,17 +30,7 @@ namespace Kalmykov_mag.Entities._Translations.TranslationEntities
         /// </summary>
         public static void ConfigureEntity(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<RoleTranslation>(entity =>
-            {
-                entity.HasOne(rt => rt.Entity)
-                 .WithMany(r => r.Translations)
-                 .HasForeignKey(rt => rt.EntityId)
-                 .OnDelete(DeleteBehavior.Cascade);
-            });
-
             ConfigureTranslation<RoleTranslation>(modelBuilder);
-
-        
 
             modelBuilder.Entity<RoleTranslation>(entity =>
             {

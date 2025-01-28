@@ -28,6 +28,7 @@
 
   <ItemGroup>
     <Folder Include="Controllers\" />
+    <Folder Include="Entities\_Product\" />
     <Folder Include="Services\" />
   </ItemGroup>
 

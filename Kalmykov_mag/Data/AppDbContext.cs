@@ -8,6 +8,7 @@ using Kalmykov_mag.Entities._Statuses;
 using System.Reflection;
 using Kalmykov_mag.Entities._Translations;
 using Kalmykov_mag.Entities._Intermediate;
+using Kalmykov_mag.Entities._Category;
 
 namespace Kalmykov_mag.Data
 {
@@ -96,6 +97,11 @@ namespace Kalmykov_mag.Data
 
             #endregion
 
+             
+
+            Category.ConfigureEntity(modelBuilder);  //Category
+             
+
             #region _Intermediate
 
             RolePermission.ConfigureEntity(modelBuilder);
@@ -115,17 +121,22 @@ namespace Kalmykov_mag.Data
             #region Translations
 
             //Вызываю все классы переводчики
-            
-            var translationBaseType = typeof(Translation<>);
+
+            var translationBaseTypes = new[]
+            {
+                typeof(Translation<>),   // Базовый тип Translation<>
+                typeof(SeoTranslation<>) // Базовый тип SeoTranslation<>
+            };
+
             var translationTypes = Assembly.GetExecutingAssembly()
-                .GetTypes()
-                .Where(t =>
-                    t.IsClass &&
-                    !t.IsAbstract &&
-                    t.BaseType != null &&
-                    t.BaseType.IsGenericType &&
-                    t.BaseType.GetGenericTypeDefinition() == translationBaseType
-                );
+            .GetTypes()
+            .Where(t =>
+                t.IsClass &&
+                !t.IsAbstract &&
+                t.BaseType != null &&
+                t.BaseType.IsGenericType &&
+                translationBaseTypes.Contains(t.BaseType.GetGenericTypeDefinition())
+            );
              
 
             foreach (var type in translationTypes)

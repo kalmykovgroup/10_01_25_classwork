@@ -14,22 +14,19 @@ namespace Kalmykov_mag.Entities._Translations
     {
         /// <summary>
         /// Мета-заголовок для SEO.
-        /// </summary>
-        [MaxLength(150)]
+        /// </summary> 
         [Column("seo_title")]
         public string SeoTitle { get; set; } = string.Empty;
 
         /// <summary>
         /// Мета-описание для SEO.
-        /// </summary>
-        [MaxLength(300)]
+        /// </summary> 
         [Column("seo_description")]
         public string SeoDescription { get; set; } = string.Empty;
 
         /// <summary>
         /// Ключевые слова для SEO.
-        /// </summary>
-        [MaxLength(200)]
+        /// </summary> 
         [Column("seo_keywords")]
         public string SeoKeywords { get; set; } = string.Empty;
 
@@ -37,11 +34,11 @@ namespace Kalmykov_mag.Entities._Translations
         /// Настройка сущности SeoTranslation.
         /// Определяет дополнительные ограничения для SEO-свойств.
         /// </summary>
-        public static void ConfigureEntity(ModelBuilder modelBuilder)
+        public static new void ConfigureTranslation<TTranslationEntity>(ModelBuilder modelBuilder) where TTranslationEntity : SeoTranslation<TEntity>
         {
-           // Translation<TEntity>.ConfigureEntity(modelBuilder);
+            Translation<TEntity>.ConfigureTranslation<TTranslationEntity>(modelBuilder);
 
-            modelBuilder.Entity<SeoTranslation<TEntity>>(entity =>
+            modelBuilder.Entity<TTranslationEntity>(entity =>
             { 
                 // Ограничения на длину SEO-свойств
                 entity.Property(e => e.SeoTitle).HasMaxLength(150);
