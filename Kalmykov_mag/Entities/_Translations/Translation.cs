@@ -38,6 +38,8 @@ namespace Kalmykov_mag.Entities._Translations
         public string LanguageCode { get; set; } = string.Empty;
 
 
+        public static int LengthLanguageCode = 5;
+
         public static void ConfigureTranslation<TTranslationEntity>(ModelBuilder modelBuilder)
           where TTranslationEntity : Translation<TEntity> 
         {
@@ -46,15 +48,10 @@ namespace Kalmykov_mag.Entities._Translations
             {
 
                 entity.HasIndex(x => new { x.EntityId, x.LanguageCode }).HasDatabaseName($"IX_{typeof(TTranslationEntity).Name}_EntityId_LanguageCode");
-
-                entity.HasOne(x => x.Entity)
-                    .WithMany()
-                    .HasForeignKey(x => x.EntityId)
-                    .OnDelete(DeleteBehavior.Cascade);
-
+ 
                 entity.Property(x => x.LanguageCode)
                     .IsRequired()
-                    .HasMaxLength(5);
+                    .HasMaxLength(LengthLanguageCode);
 
             });
 

@@ -1,4 +1,5 @@
 ﻿using Kalmykov_mag.Entities._Translations;
+using Kalmykov_mag.Entities._Translations.TranslationEntities;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
@@ -59,38 +60,39 @@ namespace Kalmykov_mag.Entities._Common
             return GetTranslation(requestedLanguageCode, selector);
         }
 
-        // TTranslation - RoleTranslation, TEntity - Role
+        //Пример: TTranslation - RoleTranslation, TEntity - Role
 
         public static void TranslatableEntityConfigure(ModelBuilder modelBuilder)
         {
-            // Настройка связи для сущности TEntity (например, Coupon)
-       /*       modelBuilder.Entity<TEntity>(entity =>
-              {
-                  // Используем явное указание свойства Translations через дженерик
-                  entity.HasMany<TTranslation>(nameof(TranslatableEntity<TTranslation, TEntity>.Translations))
-                      .WithOne(t => t.Entity)
-                      .HasForeignKey(t => t.EntityId)
-                      .OnDelete(DeleteBehavior.Cascade);
-              });*/
+            // 1.Это связь поля Entity в TTranslation(RoleTranslation: Translation(EntityId / Entity)) с полем Translations в TEntity(Role)
+            //У Role есть много Translations
+            modelBuilder.Entity<TTranslation>(entity =>
+            {
+                entity.HasOne(rt => rt.Entity)
+               .WithMany(r => r.Translations)
+               .HasForeignKey(rt => rt.EntityId)
+               .OnDelete(DeleteBehavior.Cascade);
+
+            });
 
             modelBuilder.Entity<TEntity>(entity =>
             {
-                // Теперь можно безопасно обращаться к свойству Translations
+                //2. Здесь вторая часть (обратная для связи) мы берем Translations у Role и связываем с Entity одного Translation
                 entity.HasMany(e => e.Translations)
                     .WithOne(t => t.Entity)
                     .HasForeignKey(t => t.EntityId)
                     .OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasIndex(e => e.DefaultLanguageCode);
+
+                entity.Property(entity => entity.DefaultLanguageCode).IsRequired().HasMaxLength(Translation<TEntity>.LengthLanguageCode);
             });
 
-            // Настройка сущности перевода (TTranslation)
-            /*  modelBuilder.Entity<TTranslation>(translation =>
-              {
-                  translation.ToTable($"{typeof(TEntity).Name}Translations");
-                  translation.Property(t => t.LanguageCode).HasMaxLength(7);
-              });*/
-            // Настройка для основной сущности (TEntity)
+           
+
+        
+
+
 
         }
     }
