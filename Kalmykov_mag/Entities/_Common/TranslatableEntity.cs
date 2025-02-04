@@ -62,7 +62,7 @@ namespace Kalmykov_mag.Entities._Common
 
         //Пример: TTranslation - RoleTranslation, TEntity - Role
 
-        public static void TranslatableEntityConfigure(ModelBuilder modelBuilder)
+        public static void ConfigureTranslatableEntity(ModelBuilder modelBuilder)
         {
             // 1.Это связь поля Entity в TTranslation(RoleTranslation: Translation(EntityId / Entity)) с полем Translations в TEntity(Role)
             //У Role есть много Translations

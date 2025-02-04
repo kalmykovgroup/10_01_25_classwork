@@ -46,7 +46,7 @@ namespace Kalmykov_mag.Entities._Auth
         /// </summary>
         public static void ConfigureEntity(ModelBuilder modelBuilder)
         {
-            TranslatableEntityConfigure(modelBuilder);  
+            ConfigureTranslatableEntity(modelBuilder);  
 
             modelBuilder.Entity<Permission>(entity =>
             {

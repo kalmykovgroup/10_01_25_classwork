@@ -1,11 +1,10 @@
-﻿  
-using Kalmykov_mag.Entities._Intermediate; 
-using Kalmykov_mag.Entities._Translations;
+﻿using Kalmykov_mag.Entities._Translations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System;
 using Kalmykov_mag.Entities._Common;
 using Microsoft.EntityFrameworkCore;
+using Kalmykov_mag.Entities._Discounts.Heirs;
 
 namespace Kalmykov_mag.Entities._Category
 {
@@ -67,7 +66,7 @@ namespace Kalmykov_mag.Entities._Category
         /// <summary>
         /// Скидки, связанные с этой категорией
         /// </summary>
-      //  public virtual ICollection<ProductDiscount> ProductDiscounts { get; set; } = new List<ProductDiscount>();
+        public virtual ICollection<ProductDiscount> ProductDiscounts { get; set; } = new List<ProductDiscount>();
 
         /// <summary>
         /// Предпочтения пользователей, связанные с категорией
@@ -89,7 +88,7 @@ namespace Kalmykov_mag.Entities._Category
         /// </summary>
         public static void ConfigureEntity(ModelBuilder modelBuilder)
         { 
-            TranslatableEntityConfigure(modelBuilder);
+            ConfigureTranslatableEntity(modelBuilder);
 
             modelBuilder.Entity<Category>(entity =>
             {
@@ -99,23 +98,23 @@ namespace Kalmykov_mag.Entities._Category
                     .HasForeignKey(e => e.ParentCategoryId)
                     .OnDelete(DeleteBehavior.Restrict);
 
-             /*   // Связь с товарами
-                entity.HasMany(e => e.Products)
-                    .WithOne(e => e.Category)
-                    .HasForeignKey(e => e.CategoryId)
-                    .OnDelete(DeleteBehavior.Cascade);
+                /*   // Связь с товарами
+                   entity.HasMany(e => e.Products)
+                       .WithOne(e => e.Category)
+                       .HasForeignKey(e => e.CategoryId)
+                       .OnDelete(DeleteBehavior.Cascade);
 
-                // Связь с предпочтениями пользователей через посредник
-                entity.HasMany(e => e.CustomerPreferenceCategories)
-                    .WithOne(e => e.Category)
-                    .HasForeignKey(e => e.CategoryId)
-                    .OnDelete(DeleteBehavior.Cascade);
-
+                   // Связь с предпочтениями пользователей через посредник
+                   entity.HasMany(e => e.CustomerPreferenceCategories)
+                       .WithOne(e => e.Category)
+                       .HasForeignKey(e => e.CategoryId)
+                       .OnDelete(DeleteBehavior.Cascade);
+                */
                 // Связь со скидками
                 entity.HasMany(e => e.ProductDiscounts)
                     .WithOne(e => e.Category)
                     .HasForeignKey(e => e.CategoryId)
-                    .OnDelete(DeleteBehavior.Restrict);*/
+                    .OnDelete(DeleteBehavior.Restrict);
 
                 // Настройка полей
                 entity.Property(e => e.IsActive).IsRequired().HasDefaultValue(true);

@@ -76,7 +76,7 @@ namespace Kalmykov_mag.Entities._Statuses
         /// </summary>
         public static void ConfigureEntity(ModelBuilder modelBuilder)
         {
-            TranslatableEntityConfigure(modelBuilder);
+            ConfigureTranslatableEntity(modelBuilder);
 
             modelBuilder.Entity<Status>(entity =>
             {

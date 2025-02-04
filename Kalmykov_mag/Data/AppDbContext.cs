@@ -9,6 +9,8 @@ using System.Reflection;
 using Kalmykov_mag.Entities._Translations;
 using Kalmykov_mag.Entities._Intermediate;
 using Kalmykov_mag.Entities._Category;
+using Kalmykov_mag.Entities._Order;
+using Kalmykov_mag.Entities._Product;
 
 namespace Kalmykov_mag.Data
 {
@@ -30,12 +32,14 @@ namespace Kalmykov_mag.Data
         #region Statuses
 
         public DbSet<Status> Statuses { get; set; }
-        
+
         #endregion
 
 
         #region Auth
 
+
+        public DbSet<CustomerGroup> CustomerGroups { get; set; }
 
         public DbSet<Permission> Permissions { get; set; }
 
@@ -49,11 +53,38 @@ namespace Kalmykov_mag.Data
 
         #endregion
 
+
+        #region _Category
+
+
+        public DbSet<Category> Categories { get; set; }
+
+        #endregion 
+
+
+        #region _Discounts
+
+
+
+        #endregion
+
         #region _Intermediate
 
         public DbSet<RolePermission> RolePermissions { get; set; }
         public DbSet<UserPermission> UserPermissions { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
+
+        #endregion
+
+        #region _Order
+
+        public DbSet<Order> Orders { get; set; }
+
+        #endregion
+
+        #region _Product
+
+        public DbSet<Product> Products { get; set; }
 
         #endregion
 
@@ -64,7 +95,7 @@ namespace Kalmykov_mag.Data
         //  public DbSet<SupplierTranslation> SupplierTranslations { get; set; }
         // public DbSet<BrandTranslation> BrandTranslations { get; set; }
         //  public DbSet<ProductAttributeTranslation> ProductAttributeTranslations { get; set; }
-        public DbSet<PermissionTranslation> PermissionTranslations { get; set; }
+           public DbSet<PermissionTranslation> PermissionTranslations { get; set; }
            public DbSet<RoleTranslation> RoleTranslations { get; set; }
            public DbSet<StatusTranslation> StatusTranslations { get; set; }
         #endregion
@@ -92,6 +123,8 @@ namespace Kalmykov_mag.Data
             Employee.ConfigureEntity(modelBuilder);
             Customer.ConfigureEntity(modelBuilder);
 
+            CustomerGroup.ConfigureEntity(modelBuilder);
+
             Permission.ConfigureEntity(modelBuilder);
             Role.ConfigureEntity(modelBuilder);
 
@@ -100,13 +133,28 @@ namespace Kalmykov_mag.Data
              
 
             Category.ConfigureEntity(modelBuilder);  //Category
-             
+
 
             #region _Intermediate
+
+            OrderCoupon.ConfigureEntity(modelBuilder);
 
             RolePermission.ConfigureEntity(modelBuilder);
             UserPermission.ConfigureEntity(modelBuilder);
             UserRole.ConfigureEntity(modelBuilder);
+
+            #endregion
+
+            #region _Order
+
+            Order.ConfigureEntity(modelBuilder);
+
+            #endregion
+
+
+            #region _Product
+
+            Product.ConfigureEntity(modelBuilder);
 
             #endregion
 

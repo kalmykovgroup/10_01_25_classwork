@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using Kalmykov_mag.Entities._Common;
 using Kalmykov_mag.Entities._Translations.Interfaces;
+using System.ComponentModel;
 
 namespace Kalmykov_mag.Entities._Translations
 {
@@ -36,7 +37,6 @@ namespace Kalmykov_mag.Entities._Translations
         /// </summary> 
         [Column("language_code")]
         public string LanguageCode { get; set; } = string.Empty;
-
 
         public static int LengthLanguageCode = 5;
 
