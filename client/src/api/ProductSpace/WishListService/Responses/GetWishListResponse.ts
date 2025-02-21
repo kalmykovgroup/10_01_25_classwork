@@ -1,2 +1,6 @@
+import {WishListItemDto} from "../Dtos/WishListItemDto.ts";
+import {BaseResponse} from "../../../BaseResponse.ts";
 
-export 
+export interface GetWishListResponse extends BaseResponse {
+    wishList: WishListItemDto[];
+}

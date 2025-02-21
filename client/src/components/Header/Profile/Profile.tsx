@@ -13,7 +13,7 @@ interface ProfileProps {
 
 const Profile: React.FC<ProfileProps> = ({className}: ProfileProps) => {
     const dispatch = useAppDispatch();
-    const customer = useAppSelector((state) => state.auth.customer);
+    const customer = useAppSelector((state) => state.authSlice.customer);
 
     return <>
         {customer != null ? (

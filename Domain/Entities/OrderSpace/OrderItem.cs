@@ -1,24 +1,58 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿ 
+using Domain.Entities.Common; 
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+using Domain.Entities.ProductSpace;
 
-namespace Domain.Entities._Order
-{
-    public class OrderItem : BaseEntity
-    {
-        public Guid OrderId { get; private set; }
-        public Guid ProductId { get; private set; }
-        public int Quantity { get; private set; }
+namespace Domain.Entities.OrderSpace
+{ 
+    public class OrderItem : AuditableEntity
+    { 
+        public Guid Id { get; set; }
 
-        private OrderItem() { } // Для EF Core
+        /// <summary>
+        /// Идентификатор заказа, к которому относится элемент.
+        /// </summary> 
+        public Guid OrderId { get; set; }
 
-        public OrderItem(Guid orderId, Guid productId, int quantity)
-        {
-            OrderId = orderId;
-            ProductId = productId;
-            Quantity = quantity;
-        }
+        /// <summary>
+        /// Ссылка на заказ.
+        /// </summary>
+        public virtual Order Order { get; set; } = null!;
+
+        /// <summary>
+        /// Идентификатор товара.
+        /// </summary> 
+        public Guid ProductId { get; set; }
+
+        /// <summary>
+        /// Ссылка на товар.
+        /// </summary>
+        public virtual Product Product { get; set; } = null!;
+
+        /// <summary>
+        /// Название товара на момент оформления заказа.
+        /// </summary> 
+        public string ProductName { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Количество товара.
+        /// </summary> 
+        public int Quantity { get; set; }
+
+        /// <summary>
+        /// Цена за единицу товара на момент оформления заказа.
+        /// </summary> 
+        public decimal UnitPrice { get; set; }
+
+        /// <summary>
+        /// Сумма за элемент заказа.
+        /// </summary>
+        [NotMapped]
+        public decimal TotalPrice => Quantity * UnitPrice;
+
+      
     }
+
+
 }

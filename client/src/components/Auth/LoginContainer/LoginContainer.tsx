@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
-import {useAppDispatch, useAppSelector} from "../../hooks/hooks.ts";
-import {back, loginThunk, resetError, setIsSentCode, verifyPhoneCodeThunk} from "../../store/userSpace/authSlice.ts";
-import styles from "./LoginModal.module.css";
-import {setAuthModalOpen} from "../../store/uiReducer.ts";
+import {useAppDispatch, useAppSelector} from "../../../hooks/hooks.ts";
+import {back, loginThunk, resetError, setIsSentCode, verifyPhoneCodeThunk} from "../../../store/userSpace/authSlice.ts";
+import styles from "./LoginContainer.module.css";
+import {setAuthModalOpen} from "../../../store/uiSlice.ts";
 
 
 const LoginContainer: React.FC = () => {
@@ -23,7 +23,7 @@ const LoginContainer: React.FC = () => {
         unblockingPairs,
         isSentCode,
         error
-    } = useAppSelector((state) => state.auth);
+    } = useAppSelector((state) => state.authSlice);
 
 
     const closeModal = () => {

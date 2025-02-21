@@ -3,29 +3,34 @@ import Home from "../pages/Home/Home.tsx";
 import UserProfile from "../pages/UserProfile/UserProfile.tsx";
 import Cart from "../pages/Cart/Cart.tsx";
 import Orders from "../pages/Orders/Orders.tsx";
-import Favorites from "../pages/Favorites/Favorites.tsx";
+import WishList from "../pages/WishList/WishList.tsx";
 import ProtectedRoute from "./ProtectedRoute";
-import LoginModal from "../components/Common/Auth/LoginModal.tsx";
-import {NotificationCenter} from "../components/Common/NotificationCenter/NotificationCenter.tsx";
+import {NotificationCenter} from "../components/NotificationCenter/NotificationCenter.tsx";
+import MainLayout from "../layouts/Main/MainLayout.tsx";
+import LoginModal from "../components/Auth/LoginModal.tsx";
 
 const AppRouter = () => {
     return (
         <Router>
-             <LoginModal/>
+            <LoginModal/>
             <NotificationCenter/>
             <Routes>
-                <Route path="/" element={<Home />}>
-                    
-                </Route>
-                <Route path="/profile" element={<UserProfile />} />
-                <Route path="/cart" element={<Cart />} />
-                <Route path="/favorites" element={<Favorites />} />
+                <Route path="/" element={<MainLayout />}>
 
-                {/* Доступ к Orders только для авторизованных пользователей */}
-                <Route path="/orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
+                    <Route path="/" element={<Home />} />
+
+                    <Route path="/profile" element={<ProtectedRoute><UserProfile/></ProtectedRoute>} />
+                    <Route path="/cart" element={<Cart />} />
+                    <Route path="/favorites" element={<WishList />} />
+
+                    {/* Доступ к Orders только для авторизованных пользователей */}
+                    <Route path="/orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
+                </Route>
+
 
                 {/* Если страница не найдена, редирект на Home */}
                 <Route path="*" element={<Navigate to="/" />} />
+
             </Routes>
         </Router>
     );

@@ -5,7 +5,7 @@ import { VerifyPhoneCodeCommand } from "../../api/UserSpace/CustomerService/Comm
 import { LoginResponse } from "../../api/UserSpace/CustomerService/Responses/LoginResponse";
 import { VerifyPhoneCodeResponse } from "../../api/UserSpace/CustomerService/Responses/VerifyPhoneCodeResponse";
 import { LogoutResponse } from "../../api/UserSpace/CustomerService/Responses/LogoutResponse";
-import { CustomerDto } from "../../api/UserSpace/CustomerService/DTOs/CustomerDto";
+import { CustomerDto } from "../../api/UserSpace/CustomerService/Dtos/CustomerDto";
 import {addNotification} from "../notificationSlice.ts";
 
 interface UnblockingPair {

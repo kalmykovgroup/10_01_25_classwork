@@ -1,7 +1,7 @@
 import axios from "axios";
 import { store } from "../store/store"; // Импортируем Redux store
 import { logoutThunk } from "../store/userSpace/authSlice.ts";
-import {setAuthModalOpen} from "../store/uiReducer.ts";
+import {setAuthModalOpen} from "../store/uiSlice.ts";
 import {addNotification} from "../store/notificationSlice.ts";
 import i18n from "../i18n.ts";
 

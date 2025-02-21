@@ -1,9 +1,5 @@
 import {createSlice, createAsyncThunk, PayloadAction} from "@reduxjs/toolkit";
 import { fetchProducts } from "../../api/ProductSpace/ProductService/ProductService.ts";
-import {toggleFavorite} from "../../api/ProductSpace/FavoriteService/FavoriteService.ts";
-import {
-    AddWishListProductResponse
-} from "../../api/ProductSpace/FavoriteService/Responses/AddWishListProductResponse.ts";
 import {ShortProductDtoUiExtended} from "../../api/ProductSpace/ProductService/UI/ShortProductDtoUiExtended.ts";
 import {ProductPagedResult} from "../../api/ProductSpace/ProductService/Responses/ProductPagedResult.ts";
 import {store} from "../store.ts";
@@ -46,13 +42,6 @@ export const fetchProductsThunk = createAsyncThunk<
 );
 
 
-// ✅ Новый thunk для работы с избранным
-export const toggleFavoriteThunk = createAsyncThunk<AddWishListProductResponse, string>(
-    "products/toggleFavorite",
-    async (productId) => {
-         return await toggleFavorite(productId);
-    }
-);
 
 const productsSlice = createSlice({
     name: "products",
@@ -68,6 +57,13 @@ const productsSlice = createSlice({
         setCategory: (state, action: PayloadAction<string | undefined>) => {
             state.categoryId = action.payload;
             state.page = 1;
+        },
+        // ✅ Обновляем `isFavorite` для конкретного продукта
+        updateProductFavoriteStatus: (state, action: PayloadAction<{ productId: string; isFavorite: boolean }>) => {
+            const product = state.items.find((p) => p.id === action.payload.productId);
+            if (product) {
+                product.isFavorite = action.payload.isFavorite;
+            }
         },
     },
     extraReducers: (builder) => {
@@ -95,25 +91,8 @@ const productsSlice = createSlice({
             })
 
 
-            // ✅ Обрабатываем успешное добавление в избранное
-            .addCase(toggleFavoriteThunk.fulfilled, (state, action) => {
-
-                if(action.payload.success){
-                    const product = state.items.find((p) => p.id === action.payload.productId);
-
-                    if (product) {
-                        product.isFavorite = action.payload.isFavorite;
-                    }
-                }else{
-                    store.dispatch(addNotification({ message: action.payload.error ?? "Error", type: "error" }));
-                }
-            })
-
-            .addCase(toggleFavoriteThunk.rejected, (_state, action) => {
-                store.dispatch(addNotification({ message: action.error.message ?? "Error", type: "error" }));
-            });
 
     },
 });
-export const {  setSearch, setPage, setCategory } = productsSlice.actions;
+export const {  setSearch, setPage, setCategory, updateProductFavoriteStatus } = productsSlice.actions;
 export default productsSlice.reducer;

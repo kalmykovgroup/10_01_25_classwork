@@ -1,0 +1,16 @@
+.main{
+    min-height: 400px;
+    display: flex;
+   flex-direction: column;
+    gap: 30px;
+}
+
+.sliderContainer{
+    width: 100%;
+}
+
+.productContainer{
+
+    width: 100%;
+    position: relative;
+}

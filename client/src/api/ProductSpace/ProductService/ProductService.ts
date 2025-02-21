@@ -1,8 +1,8 @@
 import apiClient from "../../clientApi.ts";
-import { LongProductDto } from "./DTOs/LongProductDto.ts";
+import { LongProductDto } from "./Dtos/LongProductDto.ts";
 import {ProductPagedResult} from "./Responses/ProductPagedResult.ts";
 import {mapShortProductUI, ShortProductDtoUiExtended} from "./UI/ShortProductDtoUiExtended.ts";
-import {ShortProductDto} from "./DTOs/ShortProductDto.ts";
+import {ShortProductDto} from "./Dtos/ShortProductDto.ts";
 import {GetFilteredProductsQuery} from "./Queries/GetFilteredProductsQuery.ts";
 
 

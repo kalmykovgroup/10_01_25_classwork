@@ -2,15 +2,20 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../../../store/store.ts";
 import styles from "./CategoryMenu.module.css";
 import {Link} from "react-router-dom";
-import {setActiveCategory} from "../../../store/header/categoriesSlice.ts";
+import {fetchCategoriesThunk, setActiveCategory} from "../../../store/header/categoriesSlice.ts";
 import arrowIcon from "../../../assets/images/category/arrow.svg";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import { CategoryDto } from "../../../api/CategorySpace/CategoryService/Dtos/CategoryDto.ts";
 
 export default function CategoryMenu() {
     const dispatch = useDispatch<AppDispatch>();
-    const {categories, activeCategory} = useSelector((state: RootState) => state.category);
+    const {categories, activeCategory} = useSelector((state: RootState) => state.categorySlice);
 
+    useEffect(() => {
+        if (categories.length === 0) {
+            dispatch(fetchCategoriesThunk());
+        }
+    }, [dispatch, categories.length, categories]);
 
     const [openCategories, setOpenCategories] = useState<{ [key: string]: boolean }>({});
 

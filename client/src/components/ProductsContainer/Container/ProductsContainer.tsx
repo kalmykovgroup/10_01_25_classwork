@@ -24,7 +24,7 @@ const ProductsContainer: React.FC = () => {
         totalPages,
         loading,
         search
-    } = useAppSelector((state) => state.products);
+    } = useAppSelector((state) => state.productsSlice);
 
     // При изменении `page` или `search` (и т.д.) подтягиваем данные
     useEffect(() => {

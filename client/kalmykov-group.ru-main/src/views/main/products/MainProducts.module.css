@@ -1,0 +1,16 @@
+.productContainer{
+    display: grid;
+    grid-template-columns: repeat(4, minmax(150px, 1fr));
+    background: white;
+    position: relative;
+    max-width: 1472px;
+    margin: 0 auto;
+}
+
+@media screen and (min-width: 1024px) {
+    .productContainer{
+        grid-template-columns: repeat(6, minmax(150px, 1fr));
+
+    }
+}
+

@@ -1,11 +1,11 @@
 import { useEffect } from "react";
-import { useAppSelector, useAppDispatch } from "../../../hooks/hooks.ts";
-import { removeNotification } from "../../../store/notificationSlice.ts";
+import { useAppSelector, useAppDispatch } from "../../hooks/hooks.ts";
+import { removeNotification } from "../../store/notificationSlice.ts";
 import { motion, AnimatePresence } from "framer-motion";
 import styles from "./NotificationCenter.module.css";
 
 export const NotificationCenter = () => {
-    const notifications = useAppSelector((state) => state.notifications.notifications);
+    const notifications = useAppSelector((state) => state.notificationsSlice.notifications);
     const dispatch = useAppDispatch();
 
     useEffect(() => {

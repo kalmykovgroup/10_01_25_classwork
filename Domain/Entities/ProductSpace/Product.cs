@@ -2,26 +2,172 @@
 using FluentValidation;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.Entities.Common;
+using Domain.Entities.TranslationsSpace.TranslationEntities;
+using Domain.Entities.CategorySpace;
+using Domain.Entities.InventorySpace;
+using Domain.Entities.IntermediateSpace;
+using Domain.Entities._Storage;
+using Domain.Entities.AnalyticsSpace; 
+using Domain.Entities.BrandSpace;
+using Domain.Models.LoyaltyProgramSpace.Bundle;
+using Domain.Entities.SupplierSpace;
+using Domain.Entities.OrderSpace;
 
-namespace Domain.Entities._Product
+namespace Domain.Entities.ProductSpace
 {
-    public class Product : BaseEntity
+    /// <summary>
+    /// Сущность, представляющая продукт в интернет-магазине.
+    /// Хранит данные о названии, цене, категории, поставщике, бренде,
+    /// а также связанную информацию, такую как запасы, характеристики и отзывы.
+    /// </summary> 
+    /// 
+    public class Product : SeoTranslatableEntity<ProductTranslation, Product>
     {
-        public Guid Id { get; private set; }
-        public string Name { get; private set; } = string.Empty;
-        public decimal Price { get; private set; }
 
-        public Product() { } // 🔹 EF Core использует этот конструктор для загрузки данных
+        public Guid Id { get; set; }
+
+        /// <summary>
+        /// Идентификатор категории, к которой относится продукт.
+        /// </summary> 
+        public Guid CategoryId { get; set; }
+
+        /// <summary>
+        /// Ссылка на категорию.
+        /// </summary>
+        public virtual Category Category { get; set; } = null!;
+
+        /// <summary>
+        /// Идентификатор поставщика, предоставившего продукт.
+        /// </summary> 
+        public Guid SupplierId { get; set; }
+
+        /// <summary>
+        /// Ссылка на поставщика.
+        /// </summary>
+       public virtual Supplier Supplier { get; set; } = null!;
+
+        /// <summary>
+        /// Цена продукта со скидкой
+        /// Вычисляется, если была создана скидка.
+        /// </summary>  
+        public decimal Price { get; set; }
+
+        /// <summary>
+        /// Рейтинг
+        /// Когда пользователь оставит отзыв о товаре, то у товара пересчетается рейтинг 
+        /// </summary>  
+        public decimal Rating { get; set; }
+
+        public int NumberOfReviews { get; set; }
+
+
+        /// <summary> 
+        /// Процент скидки, вычисляется, если была создана скидка.
+        /// </summary> 
+        public decimal? DiscountPercentage { get; set; }
+
+        /// <summary>
+        /// Цена без скидок
+        /// </summary> 
+        public decimal? OriginalPrice { get; set; }
          
 
-        public Product(string name, decimal price)
-        {
-            Id = Guid.NewGuid();
-            Name = name;
-            Price = price;
+        /// <summary>
+        /// Признак активности продукта (отображается ли он на сайте).
+        /// </summary> 
+        public bool IsActive { get; set; } = true;
+
+        /// <summary>
+        /// Уникальный идентификатор бренда.
+        /// </summary> 
+        public Guid BrandId { get; set; }
+
+        /// <summary>
+        /// Ссылка на бренд.
+        /// </summary>
+       public virtual Brand Brand { get; set; } = null!;
+
+        // ✅ Кэшируемый перевод для быстрого доступа (не маппится в БД)
+        [NotMapped]
+        private ProductTranslation? cachedTranslation;
+
+        [NotMapped]
+        public ProductTranslation? CachedTranslation {
+            get => cachedTranslation ??= GetTranslation();
+            set => cachedTranslation = value;
         }
+
+        /// <summary>
+        /// Название продукта.
+        /// </summary> 
+        [NotMapped]
+        public string Name => CachedTranslation?.Name ?? "No name";
+
+        /// <summary>
+        /// Описание продукта.
+        /// </summary>
+        [NotMapped]
+        public string? Description => CachedTranslation?.Description ?? "No description";
+
+
+        /// <summary>
+        /// Список характеристик продукта.
+        /// </summary>
+        public virtual ICollection<ProductAttribute> Attributes { get; set; } = new List<ProductAttribute>();
+
+
+        public virtual ICollection<ProductVariant> ProductVariants { get; set; } = new List<ProductVariant>();
+
+        /// <summary>
+        /// Доступное количество продукта на складе.
+        /// </summary>
+        public virtual ICollection<ProductStock> ProductStocks { get; set; } = new List<ProductStock>();
+
+
+
+        /// <summary>
+        /// Сущность, представляющая отзыв о продукте.
+        /// Хранит информацию о рейтинге, комментарии, клиентах,
+        /// а также файлы, связанные с отзывом.
+        /// </summary>
+        public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
+
+        /// <summary>
+        /// Связанные теги продукта.
+        /// </summary>
+        public virtual ICollection<ProductTag> ProductTags { get; set; } = new List<ProductTag>();
+
+        /// <summary>
+        /// Список файлов, связанных с продуктом.
+        /// </summary>
+        public virtual ICollection<ProductFile> ProductFiles { get; set; } = new List<ProductFile>();
+
+        public virtual ICollection<WishListProduct> WishListProducts { get; set; } = new List<WishListProduct>();
+
+
+      
+        public virtual ICollection<ViewHistory> ViewHistories { get; set; } = new List<ViewHistory>();
+
+        /// <summary>
+        /// Навигационное свойство: коллекция позиций заказа (OrderItem), в которых фигурирует этот товар.
+        /// </summary>
+        public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
+
+        /// <summary>
+        /// Элемент набора (bundle) товаров для групповой скидки.
+        /// Связывает конкретный товар (Product) с бандл-скидкой (DiscountBundle).
+        /// </summary>
+        public virtual ICollection<BundleItem> BundleItems { get; set; } = new List<BundleItem>();
+
+
+
     }
+
 }

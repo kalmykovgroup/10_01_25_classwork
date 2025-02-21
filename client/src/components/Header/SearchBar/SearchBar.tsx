@@ -10,7 +10,7 @@ interface SearchBarProps {
 
 const SearchBar : React.FC<SearchBarProps> = ({className}: SearchBarProps) =>  {
     const dispatch = useDispatch<AppDispatch>();
-    const {isFocused, query, searchHistory} = useSelector((state: RootState) => state.search);
+    const {isFocused, query, searchHistory} = useSelector((state: RootState) => state.searchSlice);
 
     const handleSubmit = () => {
         if (query.trim()) {

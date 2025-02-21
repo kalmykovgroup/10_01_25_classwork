@@ -21,7 +21,10 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+
+    "allowJs": true,
+    "checkJs": false,
   },
   "include": ["src"]
 }

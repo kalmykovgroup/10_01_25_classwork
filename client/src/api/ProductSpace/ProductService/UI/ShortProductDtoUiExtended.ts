@@ -1,4 +1,4 @@
-import {ShortProductDto} from "../DTOs/ShortProductDto.ts";
+import {ShortProductDto} from "../Dtos/ShortProductDto.ts";
 
 
 export interface ShortProductDtoUiExtended extends ShortProductDto {
